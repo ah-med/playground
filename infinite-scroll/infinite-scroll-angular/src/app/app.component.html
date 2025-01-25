@@ -40,21 +40,7 @@
 <div class="container">
   <h1>Infinite Scroll</h1>
   <div id="content" appInfiniteScroll (reachedBottom)="onReachedBottom()">
-    <div class="item using-flexbox-container">Item 1</div>
-    <div class="item using-flexbox-container">Item 2</div>
-    <div class="item using-flexbox-container">Item 3</div>
-    <div class="item using-flexbox-container">Item 4</div>
-    <div class="item using-flexbox-container">Item 5</div>
-    <div class="item using-flexbox-container">Item 6</div>
-    <div class="item using-flexbox-container">Item 7</div>
-    <div class="item using-flexbox-container">Item 8</div>
-    <div class="item using-flexbox-container">Item 9</div>
-    <div class="item using-flexbox-container">Item 10</div>
-    <div class="item using-flexbox-container">Item 11</div>
-    <div class="item using-flexbox-container">Item 12</div>
-    <div class="item using-flexbox-container">Item 13</div>
-    <div class="item using-flexbox-container">Item 14</div>
-    <div class="item using-flexbox-container">Item 15</div>
+    <div class="item using-flexbox-container" *ngFor="let item of items">{{ item }}</div>
   </div>
 </div>
 
