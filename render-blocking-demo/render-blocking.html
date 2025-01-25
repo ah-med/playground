@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Render Blocking Demo</title>
+    <!-- When the browser engine encounters this script, it will block the rendering of the page until the script is loaded -->
+    <!-- Because this script is placed in the head, the body will not be rendered until the script is loaded -->
+    <script src="http://localhost:3500/script.js"></script>
+</head>
+<body>
+    <h1>Render Blocking Demo</h1>
+    <h2 id="demo">DOM is loaded</h2>
+    <img src="https://via.placeholder.com/150" alt="Placeholder Image">
+    <img src="https://via.placeholder.com/150" alt="Placeholder Image">
+    <img src="https://via.placeholder.com/150" alt="Placeholder Image">
+    <hr>
+    <h3 id="script-status">Loading the script from the server</h3>
+    <!-- This script is placed in the body, below the DOM content above -->
+    <!-- Therefore, the script will not block the rendering of the page -->
+    <!-- <script src="http://localhost:3500/script.js"></script> -->
+</body>
+</html>

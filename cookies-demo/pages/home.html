@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Cookies Demo</title>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                h1 {
+                    margin: 0 auto;
+                    text-align: center;
+                }
+
+                .container {
+                    width: 60%;
+                    margin: 48px auto;
+                    text-align: left;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <h1>Cookies Demo</h1>
+        <div class="container">
+            <h2>Using Cookies to Manage User Sessions</h2>
+            <h3>How it works</h3>
+            <ol>
+                <li>On <a href="/pages/login.html">login page</a>.</li>
+                <li>User fills out the login form and clicks on the login button.</li>
+                <li>The server will set a sessionId cookie in the browser.</li>
+                <li>The browser redirects the user to the dashboard page.</li>
+                <li>On dashboard page reload, the browser will check if the user has an active session.</li>
+                <li>If no active session, browser redirects to login page.</li>
+            </ol>
+        </div>
+        <!-- <script src="../scripts/check-session.js"></script> -->
+    </body>
+</html>

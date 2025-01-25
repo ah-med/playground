@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+
+</html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Infinite Scroll</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        #top {
+            position: fixed;
+            bottom: 40px;
+            right: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <button id="logScrollInfo">Log the Info about the Scroll</button>
+    <button id="top">Scroll to the top ^</button>
+    <div class="container">
+        <h1>Infinite Scroll</h1>
+        <div id="content">
+            <div class="item">Item 1</div>
+            <div class="item">Item 2</div>
+            <div class="item">Item 3</div>
+            <div class="item">Item 4</div>
+            <div class="item">Item 5</div>
+            <div class="item">Item 6</div>
+            <div class="item">Item 7</div>
+            <div class="item">Item 8</div>
+            <div class="item">Item 9</div>
+            <div class="item">Item 10</div>
+            <div class="item">Item 11</div>
+            <div class="item">Item 12</div>
+            <div class="item">Item 13</div>
+            <div class="item">Item 14</div>
+            <div class="item">Item 15</div>
+        </div>
+        <script>
+            const scrollInfo = () => {
+                return {
+                    'window.innerHeight': window.innerHeight,
+                    'window.scrollY': window.scrollY,
+                    'document.documentElement.scrollHeight': document.documentElement.scrollHeight,
+                    'window.scrollY + window.innerHeight': window.scrollY + window.innerHeight,
+                };
+            };
+            window.addEventListener('scroll', () => {
+                // what is window.innerHeight?
+                // it is the height of the viewport
+                // what is viewport?
+                // it is the visible area of a web page
+                // what is window.scrollY?
+                // it is the number of pixels that the document is scrolled vertically
+                // what is document.documentElement.scrollHeight?
+                // it is the height of the entire document
+                if (window.innerHeight + window.scrollY >= document.documentElement.scrollHeight) {
+                    console.log('scrolled to the bottom');
+                    // use console.table to log the information about the scroll
+                    console.table(scrollInfo());
+                    // append 15 items to the content
+                    for (let i = 0; i < 15; i++) {
+                        const currentItemCount = content.children.length;
+                        const newItem = document.createElement('div');
+                        newItem.classList.add('item');
+                        newItem.textContent = `Item ${currentItemCount + 1}`;
+                        content.appendChild(newItem);
+                    }
+                }
+            });
+
+            // add event listener to the button
+            document.getElementById('logScrollInfo').addEventListener('click', () => {
+                console.log('The information about the scroll is:');
+                // use console.table to log the information about the scroll
+                console.table(scrollInfo());
+            });
+
+            document.getElementById('top').addEventListener('click', () => {
+                window.scrollTo(0, 0);
+            });
+        </script>
+</body>
+
+</html>

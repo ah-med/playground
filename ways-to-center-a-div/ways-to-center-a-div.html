@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ways to Center a Div</title>
+    <style>
+        .container {
+            border: 1px solid black;
+            padding: 20px;
+            height: 200px;
+            width: 200px;
+        }
+
+        .content {
+            border: 1px solid black;
+            padding: 20px;
+        }
+
+        .using-flexbox-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .using-grid-container {
+            display: grid;
+            place-items: center;
+        }
+
+        .using-absolute-container {
+            position: relative;
+        }
+
+        .using-absolute-container .content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .using-table-container {
+            display: table;
+        }
+
+        .using-table-container .content {
+            display: table-cell;
+            vertical-align: middle;
+            text-align: center;
+            height: 50%;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Ways to Center a Div</h1>
+    <h2>1. Using Flexbox</h2>
+    <ul>
+        Container:
+        <li><code>display: flex;</code></li>
+        <li><code>justify-content: center; // horizontally center</code></li>
+        <li><code>align-items: center; // vertically center</code></li>
+    </ul>
+    <div class="container using-flexbox-container">
+        <div class="content">content</div>
+    </div>
+
+    <h2>2. Using Grid</h2>
+    <ul>
+        Container:
+        <li><code>display: grid;</code></li>
+        <li><code>place-items: center;</code></li>
+    </ul>
+    <div class="container using-grid-container">
+        <div class="content">content</div>
+    </div>
+
+    <h2>3. Using Absolute Positioning</h2>
+    I don't recommend this method, because it's not responsive. It works well only for fixed height and width containers.
+    <ul>
+        Container:
+        <li><code>position: absolute;</code></li>
+
+        Content:
+        <li><code>position: absolute;</code></li>
+        <li><code>top: 50%;</code></li>
+        <li><code>left: 50%;</code></li>
+        <li><code>transform: translate(-50%, -50%);</code></li>
+    </ul>
+    <div class="container using-absolute-container">
+        <div class="content">content</div>
+    </div>
+
+    <h2>4. Using Table Display</h2>
+    I also don't recommend this method, you can't control the height of the content box.
+    <ul>
+        Container:
+        <li><code>display: table;</code></li>
+
+        Content:
+        <li><code>display: table-cell;</code></li>
+        <li><code>vertical-align: middle;</code></li>
+        <li><code>text-align: center;</code></li>
+    </ul>
+    <div class="container using-table-container">
+        <div class="content">content
+            <div>
+                <p>content</p>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

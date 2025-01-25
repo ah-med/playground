@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <style>
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #f0f0f0;
+            padding: 16px;
+        }
+
+        .container {
+            width: 60%;
+            margin: 48px auto;
+            text-align: left;
+        }
+
+        .container .content {
+            margin: 48px auto;
+        }
+
+        .nav-left {
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .nav-right {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            gap: 16px;
+        }
+    </style>
+</head>
+
+<body>
+    <nav>
+        <div class="nav-left">
+            <h3><a href="./home.html">Cookies Demo</a></h3>
+        </div>
+        <div class="nav-right">
+            <button id="logout" onclick="handleLogout()">Logout</button>
+        </div>
+    </nav>
+    <div class="container">
+        <h1>Dashboard</h1>
+        <div class="content">
+            <h2>Welcome to the Dashboard</h2>
+            <p>This is a secure area of the application. You can only access this page if you are logged in.</p>
+            <div class="account-info">
+                <h3>Your Account</h3>
+                <p>Name: <span id="name"></span></p>
+                <p>Email: <span id="email"></span></p>
+            </div>
+        </div>
+    </div>
+    <script>
+        async function checkSession() {
+            try {
+                const response = await fetch('http://localhost:5000/user');
+                const dir = './';
+                if (response.status !== 200) {
+                    window.location.href = dir + 'login.html';
+                    return;
+                }
+                const user = await response.json();
+                document.getElementById('email').innerText = user.email;
+                document.getElementById('name').innerText = user.name;
+            } catch (error) {
+                console.error('Error checking session:', error);
+                // if current url is not login, redirect to login
+                if (!window.location.href.includes('login')) {
+                    window.location.href = dir + 'login.html';
+                }
+            }
+        }
+
+        checkSession();
+
+        function handleLogout() {
+            fetch('http://localhost:5000/logout', {
+                method: 'POST',
+            })
+                .then(response => {
+                    if (response.ok) {
+                        window.location.href = '../pages/login.html';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error logging out:', error);
+                });
+        }
+    </script>
+</body>
+
+</html>

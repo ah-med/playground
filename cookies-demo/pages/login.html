@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cookies Demo</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+
+            h1 {
+                margin: 0 auto;
+                text-align: center;
+            }
+
+            .container {
+                width: 60%;
+                margin: 48px auto;
+                text-align: left;
+            }
+
+            .login-form {
+                display: flex;
+                flex-direction: column;
+                gap: 16px;
+                width: 60%;
+                margin: 48px auto;
+
+                input {
+                    padding: 8px;
+                    border: 1px solid #ccc;
+                    border-radius: 4px;
+                }
+
+                button {
+                    width: 100%;
+                    padding: 8px;
+                    border: 1px solid #ccc;
+                    border-radius: 4px;
+                    background-color: #007bff;
+                    color: white;
+                    cursor: pointer;
+                }
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <h1><a href="/pages/home.html">Cookies Demo</a> > Login Page</h1>
+    <div class="container">
+        <!-- login form -->
+        <form id="login-form" class="login-form" onsubmit="handleLogin(event)">
+            <!-- name -->
+            <label for="name">Name</label>
+            <input type="text" id="name" name="name" autocomplete="name">
+            <!-- email -->
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" autocomplete="email">
+            <!-- password -->
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" autocomplete="password">
+            <!-- submit button -->
+            <button type="submit">Login</button>
+        </form>
+    </div>
+    <script>
+        // if document.cookie has sessionId, redirect to dashboard
+        window.addEventListener('load', () => {
+            if (document.cookie.includes('sessionId')) {
+                window.location.href = '../pages/dashboard.html';
+            }
+        });
+
+        function handleLogin(event) {
+            event.preventDefault();
+            // get the form data
+            const formData = new FormData(event.target);
+            const data = Object.fromEntries(formData.entries());
+
+            // send the form data to the backend
+            fetch('http://localhost:5000/login', {
+                method: 'POST',
+                body: JSON.stringify(data),
+            })
+                .then(response => {
+                    if (response.ok) {
+                        window.location.href = '../pages/dashboard.html';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error logging in:', error);
+                });
+        }
+    </script>
+</body>
+
+</html>
