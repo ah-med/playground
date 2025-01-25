@@ -47,6 +47,7 @@
               // it is the height of the entire document
             if (window.innerHeight + window.scrollY >= document.documentElement.scrollHeight) {
                 console.log('scrolled to the bottom');
+                console.log('window.innerHeight + window.scrollY >= document.body.scrollHeight', window.innerHeight, window.scrollY, document.body.scrollHeight);
                 // use console.table to log the information about the scroll
                 console.table(scrollInfo());
             }
