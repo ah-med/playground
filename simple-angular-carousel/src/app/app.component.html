@@ -1,0 +1,22 @@
+<hello name="{{ name }}"></hello>
+
+<div class="dots">
+  <ng-container *ngFor="let item of items; let index = index">
+    <span
+      [class.active]="activeDotId === index"
+      (click)="activeDotId = index"
+    ></span>
+  </ng-container>
+</div>
+
+<div
+  class="slide-container"
+  (mouseenter)="destroyCarousel()"
+  (mouseleave)="setUpCarousel()"
+>
+  <ng-container *ngFor="let item of items; let index = index">
+    <div class="slide" *ngIf="activeDotId === index">
+      {{ item }}
+    </div>
+  </ng-container>
+</div>

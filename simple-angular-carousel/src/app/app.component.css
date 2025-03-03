@@ -1,0 +1,39 @@
+p {
+  font-family: Lato;
+}
+
+.dots {
+  display: flex;
+  gap: 4px;
+  align-self: center;
+}
+
+.dots > span {
+  border-radius: 100%;
+  width: 12px;
+  height: 12px;
+  background-color: #d5d5d5;
+  cursor: pointer;
+}
+
+.dots > span.active {
+  background-color: #bd6bff;
+}
+
+.slide-container {
+  margin-top: 40px;
+}
+
+.slide {
+  background-color: #bd6bff;
+  border-radius: 20px;
+  padding: 20px;
+  height: 400px;
+  max-width: 400px;
+  text-align: center;
+  display: grid;
+  align-items: center;
+  color: #fff;
+  font-size: 40px;
+  font-weight: 600;
+}
