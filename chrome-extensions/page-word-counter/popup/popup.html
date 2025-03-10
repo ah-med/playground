@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Page Word Counter</title>
+    <link rel="stylesheet" href="popup.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+</head>
+
+<body>
+    <div class="container">
+        <h1>Page Word Counter</h1>
+
+        <div class="stats">
+            <div class="stat-item">
+                <label>Words:</label>
+                <span id="wordCount">0</span>
+            </div>
+
+            <div class="stat-item">
+                <label>Characters (with spaces):</label>
+                <span id="charCountWithSpaces">0</span>
+            </div>
+
+            <div class="stat-item">
+                <label>Characters (no spaces):</label>
+                <span id="charCountNoSpaces">0</span>
+            </div>
+        </div>
+
+        <div class="controls">
+            <button id="refreshButton" title="Refresh counts">
+                <i class="fas fa-sync-alt"></i> Refresh
+            </button>
+            <small>Last updated: <span id="lastUpdated">Never</span></small>
+        </div>
+
+        <div id="error" class="error-message"></div>
+    </div>
+
+    <script src="popup.js"></script>
+</body>
+
+</html>
