@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hide/Show On MouseEnter/MouseLeave Show On Click</title>
+    <style>
+        .green-box {
+            width: 100px;
+            height: 100px;
+            background-color: green;
+            display: none;
+        }
+
+        .green-box.active {
+            display: block;
+        }
+
+        .container {
+            width: 300px;
+            height: 300px;
+            border: 1px solid black;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .hoverable-container:hover {
+            .green-box {
+                display: block;
+            }
+        }
+
+        #reset {
+            margin-top: 20px;
+        }
+
+        .row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .row>.container {
+            max-width: 30%;
+            height: 300px;
+        }
+
+        body {
+            padding: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th,
+        td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        th[data-sort] {
+            position: relative;
+            padding-right: 20px;
+        }
+
+        th[data-sort]::after {
+            content: ' \2195';  /* Up-down arrow ↕ */
+            font-size: 0.8em;
+            opacity: 0;
+            transition: opacity 0.2s;
+            position: absolute;
+            right: 4px;
+            width: 12px;
+            text-align: center;
+        }
+
+        th[data-sort]:hover::after {
+            opacity: 1;
+        }
+
+        th[data-sort="asc"]::after {
+            content: ' \2191'; /* Up arrow ↑ */
+            opacity: 1;
+        }
+
+        th[data-sort="desc"]::after {
+            content: ' \2193'; /* Down arrow ↓ */
+            opacity: 1;
+        }
+    </style>
+</head>
+
+<body>
+    <h2> 1 Container </h2>
+    <p>Hover on the outer container to show the green box</p>
+    <p>Click on the outer container to disable the hover effect</p>
+    <p>Click the reset button to enable the hover effect again</p>
+    <div id="hoverableContainer" class="container hoverable-container">
+        <div class="green-box"></div>
+    </div>
+    <button id="reset">Reset</button>
+    <h2> 3 Containers In a Row </h2>
+    <p>Only one green box will be shown at a time</p>
+    <p>Green box in first container will be shown first</p>
+    <p>Choose the container you want to show the green box in by clicking on it</p>
+    <div class="row">
+        <div id="container1" class="container hoverable-container">
+            <div class="green-box"></div>
+        </div>
+        <div id="container2" class="container hoverable-container">
+            <div class="green-box"></div>
+        </div>
+        <div id="container3" class="container hoverable-container">
+            <div class="green-box"></div>
+        </div>
+    </div>
+    <h2> Table </h2>
+    <p>Fist column is sorted in asc order by default</p>
+    <p>Hover on the column header to see the sort indicator</p>
+    <p>Click on the column header to sort the table in ascending or descending order</p>
+    <table id="table"></table>
+    <script>
+        function disableHoverableContainer(selector) {
+            return () => {
+                document.querySelector(selector).classList.remove('hoverable-container');
+            }
+        }
+
+        function enableHoverableContainer(selector) {
+            return () => {
+                document.querySelector(selector).classList.add('hoverable-container');
+            }
+        }
+        document.querySelector('#hoverableContainer').addEventListener('click', disableHoverableContainer('#hoverableContainer'));
+        document.querySelector('#reset').addEventListener('click', enableHoverableContainer('#hoverableContainer'));
+
+        function switchGreenBox(selector) {
+            return () => {
+                const greenBox = document.querySelector(selector).children[0];
+                greenBox.classList.add('active');
+
+                const otherContainers = document.querySelectorAll('.row>.container');
+                otherContainers.forEach(container => {
+                    if (`#${container.id}` !== `${selector}`) {
+                        const otherGreenBox = container.children[0];
+                        otherGreenBox.classList.remove('active');
+                    }
+                });
+            }
+        }
+
+        // Green box in first container will be shown first
+        document.querySelector('#container1').children[0].classList.add('active');
+
+
+        // Choose the container you want to show the green box in by clicking on it
+        document.querySelector('#container1').addEventListener('click', switchGreenBox('#container1'));
+        document.querySelector('#container2').addEventListener('click', switchGreenBox('#container2'));
+        document.querySelector('#container3').addEventListener('click', switchGreenBox('#container3'));
+
+    </script>
+
+    <script>
+        const tableData = [
+            {
+                name: 'John',
+                age: 20,
+                city: 'New York',
+                country: 'USA'
+            },
+            {
+                name: 'Jane',
+                age: 21,
+                city: 'Los Angeles',
+                country: 'USA'
+            },
+            {
+                name: 'Jim',
+                age: 22,
+                city: 'Chicago',
+                country: 'USA'
+            },
+            {
+                name: 'Sarah',
+                age: 28,
+                city: 'Toronto',
+                country: 'Canada'
+            },
+            {
+                name: 'Michael',
+                age: 25,
+                city: 'London',
+                country: 'UK'
+            },
+            {
+                name: 'Emma',
+                age: 24,
+                city: 'Sydney',
+                country: 'Australia'
+            },
+            {
+                name: 'David',
+                age: 31,
+                city: 'Berlin',
+                country: 'Germany'
+            },
+            {
+                name: 'Maria',
+                age: 27,
+                city: 'Madrid',
+                country: 'Spain'
+            },
+            {
+                name: 'Alex',
+                age: 29,
+                city: 'Paris',
+                country: 'France'
+            },
+            {
+                name: 'Lisa',
+                age: 23,
+                city: 'Tokyo',
+                country: 'Japan'
+            }
+        ];
+        const keys = Object.keys(tableData[0]);
+
+        function sortData(key, direction) {
+            return [...tableData].sort((a, b) => {
+                const valueA = typeof a[key] === 'string' ? a[key].toLowerCase() : a[key];
+                const valueB = typeof b[key] === 'string' ? b[key].toLowerCase() : b[key];
+
+                if (direction === 'asc') {
+                    return valueA > valueB ? 1 : -1;
+                } else {
+                    return valueA < valueB ? 1 : -1;
+                }
+            });
+        }
+
+        let currentSort = {
+            key: keys[0],
+            direction: 'asc'
+        };
+
+        function renderTable(sortedData = tableData) {
+            const table = document.querySelector('#table');
+            table.innerHTML = '';
+
+            const headerRow = document.createElement('tr');
+            keys.forEach(key => {
+                const headerCell = document.createElement('th');
+                headerCell.textContent = key.charAt(0).toUpperCase() + key.slice(1);
+
+                if (key === currentSort.key) {
+                    headerCell.setAttribute('data-sort', currentSort.direction);
+                } else {
+                    headerCell.setAttribute('data-sort', '');
+                }
+
+                headerCell.addEventListener('click', () => {
+                    const newDirection = key === currentSort.key && currentSort.direction === 'asc' ? 'desc' : 'asc';
+
+                    currentSort.key = key;
+                    currentSort.direction = newDirection;
+
+                    const sortedData = sortData(key, newDirection);
+                    renderTable(sortedData);
+                });
+                headerRow.appendChild(headerCell);
+            });
+            table.appendChild(headerRow);
+
+            sortedData.forEach(data => {
+                const row = document.createElement('tr');
+                keys.forEach(key => {
+                    const cell = document.createElement('td');
+                    cell.textContent = data[key];
+                    row.appendChild(cell);
+                });
+                table.appendChild(row);
+            });
+        }
+
+        const sortedData = sortData(currentSort.key, currentSort.direction);
+        renderTable(sortedData);
+    </script>
+</body>
+
+</html>
