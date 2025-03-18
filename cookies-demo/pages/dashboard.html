@@ -67,6 +67,8 @@
                 const response = await fetch('http://localhost:5000/user');
                 const dir = './';
                 if (response.status !== 200) {
+                    console.log('Unauthorized', response);
+                    window.alert('You are not logged in. Please login to continue.');
                     window.location.href = dir + 'login.html';
                     return;
                 }

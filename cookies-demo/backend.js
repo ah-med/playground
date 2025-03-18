@@ -39,34 +39,58 @@ const handleLogin = (req, res) => {
         }
 
         userSessions.set(sessionId, session);
-        console.log('sessionId', sessionId);
+        console.log('generated sessionId', sessionId);
 
-        res.setHeader('Set-Cookie', [
-            `sessionId=${sessionId}`, // Name and value
-            //'Expires=Wed, 21 Oct 2025 07:28:00 GMT', // Expiration date
-            'Max-Age=360', // Maximum age in seconds
-            // 'Domain=127.0.0.1:6600', // Domain
-            // 'Path=/', // Path
-            // 'Secure', // Secure flag
-            // 'HttpOnly', // HttpOnly flag
-            'SameSite=None' // SameSite attribute
-          ].join('; '));
-        res.writeHead(200, {'Content-Type': 'text/plain'});
-        res.end('OK');
-    });
-}
+    res.setHeader(
+      "Set-Cookie",
+      [
+        `sessionId=${sessionId}`,
+        "Max-Age=86400", // Set to 24 hours for testing
+        "Path=/",
+        "SameSite=Strict", // Strict is fine for same-origin testing
+        //Note: These settings are not appropriate for production, in production, you should use the following settings:
+        /**
+         maxAge: 3600000, // 1 hour in milliseconds
+        // **Expires**: Set to 1 hour - Balances security and usability.
+
+        httpOnly: true, // Prevents JavaScript access to the cookie.
+        // **HttpOnly**: true - Mitigates XSS attacks.
+
+        secure: true, // Ensures the cookie is sent only over HTTPS.
+        // **Secure**: true - Prevents exposure over unsecured channels.
+
+        sameSite: 'Lax', // Allows cookies to be sent with same-site requests.
+        // **SameSite**: 'Lax' - Enhances CSRF protection while allowing some cross-site use.
+
+        path: '/', // Set the cookie path.
+        // **Path**: '/' - Makes the cookie available across the entire application.
+
+        domain: 'example.com' // Set your domain here.
+        // **Domain**: 'example.com' - Specifies the domain for which the cookie is valid.
+         * 
+        */
+      ].join("; ")
+    );
+    res.writeHead(200, { "Content-Type": "text/plain" });
+    res.end("OK");
+  });
+};
 
 const handleGetUser = (req, res) => {
-    // get sessionId from cookies
-    const unauthorized = () => {
-        res.writeHead(401, {'Content-Type': 'text/plain'});
-        res.end('Unauthorized');
-    }
-    const sessionId = req.headers?.cookie?.split('=')[1];
-    if (!sessionId) {
-        unauthorized();
-        return;
-    }
+  const unauthorized = () => {
+    res.writeHead(401, { 'Content-Type': 'text/plain' });
+    res.end('Unauthorized');
+  };
+
+  // Extract sessionId from cookies using regex pattern
+  const cookies = req.headers?.cookie || "";
+  const sessionIdMatch = cookies.match(/sessionId=([^;]+)/);
+  const sessionId = sessionIdMatch ? sessionIdMatch[1] : null;
+
+  if (!sessionId) {
+    unauthorized();
+    return;
+  }
 
     const session = userSessions.get(sessionId);
     if (!session) {
@@ -93,10 +117,19 @@ const handleLogout = (req, res) => {
 }
 
 const server = http.createServer((req, res) => {
-    // allow cors
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  // for localhost testing, allow specific origin
+  const origin = 'http://localhost:5000';
+  res.setHeader("Access-Control-Allow-Origin", origin);
+  res.setHeader("Access-Control-Allow-Credentials", "true");
+  res.setHeader(
+    "Access-Control-Allow-Methods",
+    "GET, POST, PUT, DELETE, OPTIONS"
+  );
+  res.setHeader(
+    "Access-Control-Allow-Headers",
+    "Content-Type, Authorization, Cookie"
+  );
+
 
     // logRequest
     console.table({
@@ -122,4 +155,8 @@ const server = http.createServer((req, res) => {
 });
 
 const PORT = process.env.PORT || 5000;
-server.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+server.listen(PORT, () =>
+  console.log(
+    `Server running on port ${PORT}. visit: http://localhost:${PORT}/pages/home.html`
+  )
+);
