@@ -2,6 +2,8 @@
 
 A React application that demonstrates key React concepts through an interactive card customization interface.
 
+🔗 [View Live Demo](https://ah-med.github.io/playground/card-editor/)
+
 ## Core React Concepts Demonstrated
 
 ### 1. Component-Based Architecture
