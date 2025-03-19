@@ -1,6 +1,6 @@
 import { formatCurrency } from './utils';
 
-import { client } from '../lib/db';
+import { client } from './db';
 
 
 await client.connect()
