@@ -1,0 +1,82 @@
+name: Build all example web apps and deploy to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+# Add permissions block
+permissions:
+  contents: write
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Build card-editor
+        working-directory: react/card-editor
+        run: |
+          npm ci
+          npm run build
+          mkdir -p ../../dist/card-editor
+          cp -r dist/* ../../dist/card-editor/
+
+      - name: Create 404.html
+        run: |
+          # Create a simple 404 page that redirects to index.html
+          echo '<!DOCTYPE html>
+          <html>
+            <head>
+              <meta charset="utf-8">
+              <title>Redirecting...</title>
+              <script>
+                const path = window.location.pathname;
+                const redirectPath = path.replace(/\/+$/, "");
+                window.location.href = redirectPath + "/index.html";
+              </script>
+            </head>
+            <body>
+              <p>Redirecting...</p>
+            </body>
+          </html>' > dist/404.html
+
+      - name: Create index page
+        run: |
+          echo '<!DOCTYPE html>
+          <html>
+            <head>
+              <meta charset="utf-8">
+              <title>React Examples</title>
+              <style>
+                body { font-family: -apple-system, system-ui, sans-serif; max-width: 800px; margin: 0 auto; padding: 2rem; }
+                .examples { display: grid; gap: 1rem; }
+                .example { padding: 1rem; border: 1px solid #ddd; border-radius: 4px; }
+              </style>
+            </head>
+            <body>
+              <h1>React Examples</h1>
+              <div class="examples">
+                <div class="example">
+                  <h2>Card Editor</h2>
+                  <p>An interactive card customization interface demonstrating core React concepts.</p>
+                  <a href="./card-editor/">View Demo</a>
+                </div>
+              </div>
+            </body>
+          </html>' > dist/index.html
+
+      - name: Deploy to GitHub Pages
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: dist
+          branch: gh-pages
