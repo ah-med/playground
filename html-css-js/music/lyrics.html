@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lyrics - Metal Player</title>
+    <link rel="stylesheet" href="shared.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* Lyrics Container Styles */
+        .lyrics-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Song Info */
+        .song-info {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .song-title {
+            font-size: 2.5rem;
+            color: var(--metal-text);
+            margin-bottom: 0.5rem;
+        }
+
+        .song-artist {
+            color: var(--metal-text-secondary);
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+        }
+
+        .song-album {
+            color: var(--metal-text-secondary);
+            font-size: 1rem;
+        }
+
+        /* Lyrics Content */
+        .lyrics-content {
+            background: var(--metal-card-bg);
+            border: 2px solid var(--metal-border);
+            border-radius: 10px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .lyrics-text {
+            color: var(--metal-text);
+            font-size: 1.1rem;
+            line-height: 1.8;
+            white-space: pre-line;
+        }
+
+        .lyrics-line {
+            margin-bottom: 1rem;
+            transition: all 0.3s;
+        }
+
+        .lyrics-line.active {
+            color: var(--metal-highlight);
+            font-weight: 500;
+        }
+
+        /* Translation Section */
+        .translation-section {
+            background: var(--metal-card-bg);
+            border: 2px solid var(--metal-border);
+            border-radius: 10px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .translation-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .translation-title {
+            font-size: 1.5rem;
+            color: var(--metal-text);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .translation-title i {
+            color: var(--metal-highlight);
+        }
+
+        .translation-toggle {
+            background: var(--metal-bg);
+            border: 2px solid var(--metal-border);
+            border-radius: 5px;
+            padding: 0.5rem 1rem;
+            color: var(--metal-text);
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .translation-toggle:hover {
+            background: var(--metal-highlight);
+        }
+
+        .translation-text {
+            color: var(--metal-text-secondary);
+            font-size: 1.1rem;
+            line-height: 1.8;
+            white-space: pre-line;
+        }
+
+        /* Additional Info */
+        .additional-info {
+            background: var(--metal-card-bg);
+            border: 2px solid var(--metal-border);
+            border-radius: 10px;
+            padding: 2rem;
+        }
+
+        .info-section {
+            margin-bottom: 2rem;
+        }
+
+        .info-section:last-child {
+            margin-bottom: 0;
+        }
+
+        .info-title {
+            font-size: 1.2rem;
+            color: var(--metal-text);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .info-title i {
+            color: var(--metal-highlight);
+        }
+
+        .info-content {
+            color: var(--metal-text-secondary);
+            line-height: 1.6;
+        }
+
+        /* Responsive Styles */
+        @media screen and (max-width: 768px) {
+            .lyrics-container {
+                padding-top: 5rem;
+            }
+
+            .song-info {
+                margin-bottom: 2rem;
+            }
+
+            .song-title {
+                font-size: 2rem;
+            }
+
+            .lyrics-content,
+            .translation-section,
+            .additional-info {
+                padding: 1.5rem;
+            }
+        }
+
+        @media screen and (max-width: 480px) {
+            .lyrics-container {
+                padding: 5rem 1rem 1rem;
+            }
+
+            .song-title {
+                font-size: 1.8rem;
+            }
+
+            .lyrics-content,
+            .translation-section,
+            .additional-info {
+                padding: 1rem;
+            }
+
+            .lyrics-text,
+            .translation-text {
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Mobile Navigation Toggle -->
+    <button class="mobile-nav-toggle" id="mobileNavToggle">
+        <i class="fas fa-bars"></i>
+    </button>
+
+    <!-- Desktop Navigation -->
+    <nav class="metal-nav">
+        <a href="home.html" class="metal-nav-item">Home</a>
+        <a href="search.html" class="metal-nav-item">Search</a>
+        <a href="library.html" class="metal-nav-item">Library</a>
+        <a href="profile.html" class="metal-nav-item">Profile</a>
+        <a href="settings.html" class="metal-nav-item">Settings</a>
+    </nav>
+
+    <!-- Side Navigation -->
+    <nav class="side-nav" id="sideNav">
+        <div class="side-nav-header">
+            <a href="home.html" class="side-nav-logo">Metal Player</a>
+            <button class="side-nav-close" id="sideNavClose">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <ul class="side-nav-menu">
+            <li class="side-nav-item">
+                <a href="home.html" class="side-nav-link">
+                    <i class="fas fa-home"></i>
+                    Home
+                </a>
+            </li>
+            <li class="side-nav-item">
+                <a href="search.html" class="side-nav-link">
+                    <i class="fas fa-search"></i>
+                    Search
+                </a>
+            </li>
+            <li class="side-nav-item">
+                <a href="library.html" class="side-nav-link">
+                    <i class="fas fa-music"></i>
+                    Library
+                </a>
+            </li>
+            <li class="side-nav-item">
+                <a href="profile.html" class="side-nav-link">
+                    <i class="fas fa-user"></i>
+                    Profile
+                </a>
+            </li>
+            <li class="side-nav-item">
+                <a href="settings.html" class="side-nav-link">
+                    <i class="fas fa-cog"></i>
+                    Settings
+                </a>
+            </li>
+        </ul>
+    </nav>
+
+    <!-- Navigation Overlay -->
+    <div class="nav-overlay" id="navOverlay"></div>
+
+    <!-- Theme Switch Button -->
+    <button class="theme-switch" id="themeSwitch">
+        <i class="fas fa-sun"></i>
+    </button>
+
+    <!-- Lyrics Container -->
+    <div class="lyrics-container">
+        <!-- Song Info -->
+        <div class="song-info">
+            <h1 class="song-title">Song Title</h1>
+            <div class="song-artist">Artist Name</div>
+            <div class="song-album">Album Name</div>
+        </div>
+
+        <!-- Lyrics Content -->
+        <div class="lyrics-content">
+            <div class="lyrics-text">
+                <div class="lyrics-line">Verse 1</div>
+                <div class="lyrics-line">Line 1 of the song</div>
+                <div class="lyrics-line">Line 2 of the song</div>
+                <div class="lyrics-line">Line 3 of the song</div>
+                <div class="lyrics-line">Line 4 of the song</div>
+                <div class="lyrics-line">Chorus</div>
+                <div class="lyrics-line">Chorus line 1</div>
+                <div class="lyrics-line">Chorus line 2</div>
+                <div class="lyrics-line">Chorus line 3</div>
+                <div class="lyrics-line">Verse 2</div>
+                <div class="lyrics-line">Line 1 of verse 2</div>
+                <div class="lyrics-line">Line 2 of verse 2</div>
+                <div class="lyrics-line">Line 3 of verse 2</div>
+                <div class="lyrics-line">Line 4 of verse 2</div>
+                <div class="lyrics-line">Bridge</div>
+                <div class="lyrics-line">Bridge line 1</div>
+                <div class="lyrics-line">Bridge line 2</div>
+                <div class="lyrics-line">Bridge line 3</div>
+                <div class="lyrics-line">Final Chorus</div>
+                <div class="lyrics-line">Chorus line 1</div>
+                <div class="lyrics-line">Chorus line 2</div>
+                <div class="lyrics-line">Chorus line 3</div>
+            </div>
+        </div>
+
+        <!-- Translation Section -->
+        <div class="translation-section">
+            <div class="translation-header">
+                <h2 class="translation-title">
+                    <i class="fas fa-language"></i>
+                    Translation
+                </h2>
+                <button class="translation-toggle" id="translationToggle">
+                    <i class="fas fa-globe"></i>
+                    Show Translation
+                </button>
+            </div>
+            <div class="translation-text" style="display: none;">
+                <div class="lyrics-line">Verse 1</div>
+                <div class="lyrics-line">Translated line 1</div>
+                <div class="lyrics-line">Translated line 2</div>
+                <div class="lyrics-line">Translated line 3</div>
+                <div class="lyrics-line">Translated line 4</div>
+                <div class="lyrics-line">Chorus</div>
+                <div class="lyrics-line">Translated chorus line 1</div>
+                <div class="lyrics-line">Translated chorus line 2</div>
+                <div class="lyrics-line">Translated chorus line 3</div>
+                <div class="lyrics-line">Verse 2</div>
+                <div class="lyrics-line">Translated line 1 of verse 2</div>
+                <div class="lyrics-line">Translated line 2 of verse 2</div>
+                <div class="lyrics-line">Translated line 3 of verse 2</div>
+                <div class="lyrics-line">Translated line 4 of verse 2</div>
+                <div class="lyrics-line">Bridge</div>
+                <div class="lyrics-line">Translated bridge line 1</div>
+                <div class="lyrics-line">Translated bridge line 2</div>
+                <div class="lyrics-line">Translated bridge line 3</div>
+                <div class="lyrics-line">Final Chorus</div>
+                <div class="lyrics-line">Translated chorus line 1</div>
+                <div class="lyrics-line">Translated chorus line 2</div>
+                <div class="lyrics-line">Translated chorus line 3</div>
+            </div>
+        </div>
+
+        <!-- Additional Info -->
+        <div class="additional-info">
+            <div class="info-section">
+                <h3 class="info-title">
+                    <i class="fas fa-info-circle"></i>
+                    About the Song
+                </h3>
+                <div class="info-content">
+                    This song was released in 2023 as part of the artist's latest album. It explores themes of love,
+                    loss, and personal growth, drawing inspiration from the artist's own experiences.
+                </div>
+            </div>
+            <div class="info-section">
+                <h3 class="info-title">
+                    <i class="fas fa-music"></i>
+                    Song Credits
+                </h3>
+                <div class="info-content">
+                    Written by: Artist Name, Co-Writer Name<br>
+                    Produced by: Producer Name<br>
+                    Recorded at: Studio Name<br>
+                    Released: 2023
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Theme Switching
+        const themeSwitch = document.getElementById('themeSwitch');
+        const icon = themeSwitch.querySelector('i');
+
+        function setTheme(theme) {
+            document.documentElement.setAttribute('data-theme', theme);
+            localStorage.setItem('theme', theme);
+            updateIcon(theme);
+        }
+
+        function updateIcon(theme) {
+            icon.className = theme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+        }
+
+        // Check for saved theme preference
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme) {
+            setTheme(savedTheme);
+        } else {
+            // Check system preference
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            setTheme(prefersDark ? 'dark' : 'light');
+        }
+
+        themeSwitch.addEventListener('click', () => {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            setTheme(newTheme);
+        });
+
+        // Mobile Navigation
+        const mobileNavToggle = document.getElementById('mobileNavToggle');
+        const sideNav = document.getElementById('sideNav');
+        const sideNavClose = document.getElementById('sideNavClose');
+        const navOverlay = document.getElementById('navOverlay');
+
+        function toggleSideNav() {
+            sideNav.classList.toggle('active');
+            navOverlay.classList.toggle('active');
+            document.body.style.overflow = sideNav.classList.contains('active') ? 'hidden' : '';
+        }
+
+        mobileNavToggle.addEventListener('click', toggleSideNav);
+        sideNavClose.addEventListener('click', toggleSideNav);
+        navOverlay.addEventListener('click', toggleSideNav);
+
+        // Close side nav when clicking a link
+        document.querySelectorAll('.side-nav-link').forEach(link => {
+            link.addEventListener('click', () => {
+                if (sideNav.classList.contains('active')) {
+                    toggleSideNav();
+                }
+            });
+        });
+
+        // Translation Toggle
+        const translationToggle = document.getElementById('translationToggle');
+        const translationText = document.querySelector('.translation-text');
+        let isTranslationVisible = false;
+
+        translationToggle.addEventListener('click', () => {
+            isTranslationVisible = !isTranslationVisible;
+            translationText.style.display = isTranslationVisible ? 'block' : 'none';
+            translationToggle.innerHTML = isTranslationVisible ?
+                '<i class="fas fa-globe"></i> Hide Translation' :
+                '<i class="fas fa-globe"></i> Show Translation';
+        });
+
+        // Simulate lyrics highlighting
+        const lyricsLines = document.querySelectorAll('.lyrics-line');
+        let currentLine = 0;
+
+        function highlightLyrics() {
+            lyricsLines.forEach(line => line.classList.remove('active'));
+            lyricsLines[currentLine].classList.add('active');
+            currentLine = (currentLine + 1) % lyricsLines.length;
+        }
+
+        // Highlight lyrics every 3 seconds (simulating song playback)
+        setInterval(highlightLyrics, 3000);
+    </script>
+</body>
+
+</html>

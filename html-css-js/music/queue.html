@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Queue - Metal Player</title>
+    <link rel="stylesheet" href="shared.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* Queue Container Styles */
+        .queue-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Queue Header */
+        .queue-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .queue-title {
+            font-size: 2rem;
+            color: var(--metal-text);
+            margin: 0;
+        }
+
+        .queue-actions {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .action-button {
+            padding: 0.8rem 1.5rem;
+            background: var(--metal-card-bg);
+            border: 2px solid var(--metal-border);
+            border-radius: 25px;
+            color: var(--metal-text);
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .action-button:hover {
+            background: var(--metal-highlight);
+            transform: translateY(-2px);
+        }
+
+        /* Queue Tabs */
+        .queue-tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            border-bottom: 2px solid var(--metal-border);
+            padding-bottom: 1rem;
+        }
+
+        .queue-tab {
+            padding: 0.5rem 1rem;
+            color: var(--metal-text);
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .queue-tab:hover {
+            color: var(--metal-highlight);
+        }
+
+        .queue-tab.active {
+            color: var(--metal-highlight);
+        }
+
+        .queue-tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1rem;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: var(--metal-highlight);
+        }
+
+        /* Queue List */
+        .queue-list {
+            display: grid;
+            gap: 0.5rem;
+        }
+
+        .queue-item {
+            display: grid;
+            grid-template-columns: 50px 1fr auto;
+            gap: 1rem;
+            padding: 1rem;
+            background: var(--metal-card-bg);
+            border: 2px solid var(--metal-border);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .queue-item:hover {
+            transform: translateX(5px);
+            background: var(--metal-highlight);
+        }
+
+        .queue-item.playing {
+            background: var(--metal-highlight);
+            border-color: var(--metal-accent);
+        }
+
+        .queue-number {
+            color: var(--metal-text-secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .queue-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .queue-image {
+            width: 50px;
+            height: 50px;
+            border-radius: 5px;
+            object-fit: cover;
+        }
+
+        .queue-details {
+            display: flex;
+            flex-direction: column;
+            gap: 0.3rem;
+        }
+
+        .queue-title {
+            color: var(--metal-text);
+            font-weight: 500;
+        }
+
+        .queue-artist {
+            color: var(--metal-text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .queue-duration {
+            color: var(--metal-text-secondary);
+            display: flex;
+            align-items: center;
+        }
+
+        /* Queue Controls */
+        .queue-controls {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--metal-card-bg);
+            border-top: 2px solid var(--metal-border);
+            padding: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            z-index: 100;
+        }
+
+        .control-group {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .control-button {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--metal-bg);
+            border: 2px solid var(--metal-border);
+            color: var(--metal-text);
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .control-button:hover {
+            background: var(--metal-highlight);
+            transform: scale(1.1);
+        }
+
+        .control-button.primary {
+            background: var(--metal-highlight);
+            border-color: var(--metal-accent);
+        }
+
+        .progress-bar {
+            flex: 1;
+            height: 4px;
+            background: var(--metal-border);
+            border-radius: 2px;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .progress {
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            background: var(--metal-highlight);
+            border-radius: 2px;
+            width: 30%;
+        }
+
+        .time-info {
+            display: flex;
+            gap: 0.5rem;
+            color: var(--metal-text-secondary);
+            font-size: 0.9rem;
+        }
+
+        /* Responsive Styles */
+        @media screen and (max-width: 768px) {
+            .queue-container {
+                padding-top: 5rem;
+            }
+
+            .queue-header {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+
+            .queue-actions {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .queue-tabs {
+                overflow-x: auto;
+                padding-bottom: 0.5rem;
+            }
+
+            .queue-item {
+                grid-template-columns: 40px 1fr auto;
+                padding: 0.8rem;
+            }
+
+            .queue-image {
+                width: 40px;
+                height: 40px;
+            }
+        }
+
+        @media screen and (max-width: 480px) {
+            .queue-container {
+                padding: 5rem 1rem 1rem;
+            }
+
+            .queue-title {
+                font-size: 1.8rem;
+            }
+
+            .queue-actions {
+                flex-wrap: wrap;
+            }
+
+            .action-button {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .queue-item {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+
+            .queue-number {
+                display: none;
+            }
+
+            .queue-info {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .queue-duration {
+                margin-top: 0.5rem;
+            }
+
+            .queue-controls {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .progress-bar {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Mobile Navigation Toggle -->
+    <button class="mobile-nav-toggle" id="mobileNavToggle">
+        <i class="fas fa-bars"></i>
+    </button>
+
+    <!-- Desktop Navigation -->
+    <nav class="metal-nav">
+        <a href="home.html" class="metal-nav-item">Home</a>
+        <a href="search.html" class="metal-nav-item">Search</a>
+        <a href="library.html" class="metal-nav-item">Library</a>
+        <a href="profile.html" class="metal-nav-item">Profile</a>
+        <a href="settings.html" class="metal-nav-item">Settings</a>
+    </nav>
+
+    <!-- Side Navigation -->
+    <nav class="side-nav" id="sideNav">
+        <div class="side-nav-header">
+            <a href="home.html" class="side-nav-logo">Metal Player</a>
+            <button class="side-nav-close" id="sideNavClose">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <ul class="side-nav-menu">
+            <li class="side-nav-item">
+                <a href="home.html" class="side-nav-link">
+                    <i class="fas fa-home"></i>
+                    Home
+                </a>
+            </li>
+            <li class="side-nav-item">
+                <a href="search.html" class="side-nav-link">
+                    <i class="fas fa-search"></i>
+                    Search
+                </a>
+            </li>
+            <li class="side-nav-item">
+                <a href="library.html" class="side-nav-link">
+                    <i class="fas fa-music"></i>
+                    Library
+                </a>
+            </li>
+            <li class="side-nav-item">
+                <a href="profile.html" class="side-nav-link">
+                    <i class="fas fa-user"></i>
+                    Profile
+                </a>
+            </li>
+            <li class="side-nav-item">
+                <a href="settings.html" class="side-nav-link">
+                    <i class="fas fa-cog"></i>
+                    Settings
+                </a>
+            </li>
+        </ul>
+    </nav>
+
+    <!-- Navigation Overlay -->
+    <div class="nav-overlay" id="navOverlay"></div>
+
+    <!-- Theme Switch Button -->
+    <button class="theme-switch" id="themeSwitch">
+        <i class="fas fa-sun"></i>
+    </button>
+
+    <!-- Queue Container -->
+    <div class="queue-container">
+        <!-- Queue Header -->
+        <div class="queue-header">
+            <h1 class="queue-title">Now Playing</h1>
+            <div class="queue-actions">
+                <button class="action-button">
+                    <i class="fas fa-random"></i>
+                    Shuffle
+                </button>
+                <button class="action-button">
+                    <i class="fas fa-redo"></i>
+                    Repeat
+                </button>
+            </div>
+        </div>
+
+        <!-- Queue Tabs -->
+        <div class="queue-tabs">
+            <div class="queue-tab active">Up Next</div>
+            <div class="queue-tab">Recently Played</div>
+            <div class="queue-tab">History</div>
+        </div>
+
+        <!-- Queue List -->
+        <div class="queue-list">
+            <div class="queue-item playing">
+                <div class="queue-number">
+                    <i class="fas fa-play"></i>
+                </div>
+                <div class="queue-info">
+                    <img src="https://via.placeholder.com/50" alt="Song Cover" class="queue-image">
+                    <div class="queue-details">
+                        <div class="queue-title">Current Song Title</div>
+                        <div class="queue-artist">Artist Name</div>
+                    </div>
+                </div>
+                <div class="queue-duration">3:45</div>
+            </div>
+            <div class="queue-item">
+                <div class="queue-number">1</div>
+                <div class="queue-info">
+                    <img src="https://via.placeholder.com/50" alt="Song Cover" class="queue-image">
+                    <div class="queue-details">
+                        <div class="queue-title">Next Song Title</div>
+                        <div class="queue-artist">Artist Name</div>
+                    </div>
+                </div>
+                <div class="queue-duration">4:20</div>
+            </div>
+            <div class="queue-item">
+                <div class="queue-number">2</div>
+                <div class="queue-info">
+                    <img src="https://via.placeholder.com/50" alt="Song Cover" class="queue-image">
+                    <div class="queue-details">
+                        <div class="queue-title">Another Song Title</div>
+                        <div class="queue-artist">Artist Name</div>
+                    </div>
+                </div>
+                <div class="queue-duration">3:15</div>
+            </div>
+            <div class="queue-item">
+                <div class="queue-number">3</div>
+                <div class="queue-info">
+                    <img src="https://via.placeholder.com/50" alt="Song Cover" class="queue-image">
+                    <div class="queue-details">
+                        <div class="queue-title">Yet Another Song</div>
+                        <div class="queue-artist">Artist Name</div>
+                    </div>
+                </div>
+                <div class="queue-duration">4:50</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Queue Controls -->
+    <div class="queue-controls">
+        <div class="control-group">
+            <button class="control-button">
+                <i class="fas fa-random"></i>
+            </button>
+            <button class="control-button">
+                <i class="fas fa-step-backward"></i>
+            </button>
+            <button class="control-button primary">
+                <i class="fas fa-play"></i>
+            </button>
+            <button class="control-button">
+                <i class="fas fa-step-forward"></i>
+            </button>
+            <button class="control-button">
+                <i class="fas fa-redo"></i>
+            </button>
+        </div>
+        <div class="progress-bar">
+            <div class="progress"></div>
+        </div>
+        <div class="time-info">
+            <span>1:30</span>
+            <span>/</span>
+            <span>3:45</span>
+        </div>
+    </div>
+
+    <script>
+        // Theme Switching
+        const themeSwitch = document.getElementById('themeSwitch');
+        const icon = themeSwitch.querySelector('i');
+
+        function setTheme(theme) {
+            document.documentElement.setAttribute('data-theme', theme);
+            localStorage.setItem('theme', theme);
+            updateIcon(theme);
+        }
+
+        function updateIcon(theme) {
+            icon.className = theme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+        }
+
+        // Check for saved theme preference
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme) {
+            setTheme(savedTheme);
+        } else {
+            // Check system preference
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            setTheme(prefersDark ? 'dark' : 'light');
+        }
+
+        themeSwitch.addEventListener('click', () => {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            setTheme(newTheme);
+        });
+
+        // Mobile Navigation
+        const mobileNavToggle = document.getElementById('mobileNavToggle');
+        const sideNav = document.getElementById('sideNav');
+        const sideNavClose = document.getElementById('sideNavClose');
+        const navOverlay = document.getElementById('navOverlay');
+
+        function toggleSideNav() {
+            sideNav.classList.toggle('active');
+            navOverlay.classList.toggle('active');
+            document.body.style.overflow = sideNav.classList.contains('active') ? 'hidden' : '';
+        }
+
+        mobileNavToggle.addEventListener('click', toggleSideNav);
+        sideNavClose.addEventListener('click', toggleSideNav);
+        navOverlay.addEventListener('click', toggleSideNav);
+
+        // Close side nav when clicking a link
+        document.querySelectorAll('.side-nav-link').forEach(link => {
+            link.addEventListener('click', () => {
+                if (sideNav.classList.contains('active')) {
+                    toggleSideNav();
+                }
+            });
+        });
+
+        // Queue Tab Toggle
+        document.querySelectorAll('.queue-tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                document.querySelectorAll('.queue-tab').forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+            });
+        });
+
+        // Play/Pause Toggle
+        const playButton = document.querySelector('.control-button.primary');
+        playButton.addEventListener('click', () => {
+            const icon = playButton.querySelector('i');
+            icon.className = icon.className === 'fas fa-play' ? 'fas fa-pause' : 'fas fa-play';
+        });
+    </script>
+</body>
+
+</html>

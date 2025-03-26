@@ -1,0 +1,586 @@
+/* Metal Texture Theme - Shared Styles */
+
+/* System Theme Detection */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --metal-dark: #2a2a2a;
+    --metal-light: #3a3a3a;
+    --metal-border: #444;
+    --metal-highlight: #666;
+    --metal-text: #ddd;
+    --metal-text-secondary: #aaa;
+    --metal-accent: #888;
+    --metal-bg: #1a1a1a;
+    --metal-card-bg: linear-gradient(
+      145deg,
+      var(--metal-dark),
+      var(--metal-light)
+    );
+    --metal-card-border: var(--metal-border);
+    --metal-shadow-color: rgba(0, 0, 0, 0.8);
+    --metal-inset-shadow: rgba(0, 0, 0, 0.5);
+    --metal-text-shadow: rgba(255, 255, 255, 0.3);
+  }
+}
+
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) {
+    --metal-dark: #e0e0e0;
+    --metal-light: #f0f0f0;
+    --metal-border: #ccc;
+    --metal-highlight: #b0b0b0;
+    --metal-text: #333;
+    --metal-text-secondary: #666;
+    --metal-accent: #999;
+    --metal-bg: #ffffff;
+    --metal-card-bg: linear-gradient(
+      145deg,
+      var(--metal-light),
+      var(--metal-dark)
+    );
+    --metal-card-border: var(--metal-border);
+    --metal-shadow-color: rgba(0, 0, 0, 0.2);
+    --metal-inset-shadow: rgba(0, 0, 0, 0.1);
+    --metal-text-shadow: rgba(0, 0, 0, 0.1);
+  }
+}
+
+/* Dark Theme Override */
+[data-theme="dark"] {
+  --metal-dark: #2a2a2a;
+  --metal-light: #3a3a3a;
+  --metal-border: #444;
+  --metal-highlight: #666;
+  --metal-text: #ddd;
+  --metal-text-secondary: #aaa;
+  --metal-accent: #888;
+  --metal-bg: #1a1a1a;
+  --metal-card-bg: linear-gradient(
+    145deg,
+    var(--metal-dark),
+    var(--metal-light)
+  );
+  --metal-card-border: var(--metal-border);
+  --metal-shadow-color: rgba(0, 0, 0, 0.8);
+  --metal-inset-shadow: rgba(0, 0, 0, 0.5);
+  --metal-text-shadow: rgba(255, 255, 255, 0.3);
+}
+
+/* Light Theme Override */
+[data-theme="light"] {
+  --metal-dark: #e0e0e0;
+  --metal-light: #f0f0f0;
+  --metal-border: #ccc;
+  --metal-highlight: #b0b0b0;
+  --metal-text: #333;
+  --metal-text-secondary: #666;
+  --metal-accent: #999;
+  --metal-bg: #ffffff;
+  --metal-card-bg: linear-gradient(
+    145deg,
+    var(--metal-light),
+    var(--metal-dark)
+  );
+  --metal-card-border: var(--metal-border);
+  --metal-shadow-color: rgba(0, 0, 0, 0.2);
+  --metal-inset-shadow: rgba(0, 0, 0, 0.1);
+  --metal-text-shadow: rgba(0, 0, 0, 0.1);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Arial", sans-serif;
+}
+
+body {
+  background: var(--metal-bg);
+  color: var(--metal-text);
+  min-height: 100vh;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+/* Theme Switch Button */
+.theme-switch {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  z-index: 1000;
+  background: var(--metal-card-bg);
+  border: 2px solid var(--metal-border);
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 4px 8px var(--metal-shadow-color);
+  transition: all 0.3s;
+}
+
+.theme-switch:hover {
+  transform: scale(1.1);
+}
+
+.theme-switch:active {
+  transform: scale(0.95);
+}
+
+.theme-switch i {
+  font-size: 1.2rem;
+  color: var(--metal-text);
+}
+
+/* Metal Container Base */
+.metal-container {
+  background: var(--metal-card-bg);
+  border: 2px solid var(--metal-card-border);
+  border-radius: 15px;
+  box-shadow: 0 0 20px var(--metal-shadow-color),
+    0 0 40px var(--metal-shadow-color), inset 0 0 20px var(--metal-inset-shadow);
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s;
+}
+
+/* Metal Texture Overlay */
+.metal-texture {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: repeating-linear-gradient(
+      45deg,
+      rgba(255, 255, 255, 0.03) 0px,
+      rgba(255, 255, 255, 0.03) 1px,
+      transparent 1px,
+      transparent 10px
+    ),
+    repeating-linear-gradient(
+      -45deg,
+      rgba(255, 255, 255, 0.03) 0px,
+      rgba(255, 255, 255, 0.03) 1px,
+      transparent 1px,
+      transparent 10px
+    );
+  pointer-events: none;
+  border-radius: 13px;
+}
+
+/* Metal Button Styles */
+.metal-button {
+  background: linear-gradient(
+    145deg,
+    var(--metal-highlight),
+    var(--metal-border)
+  );
+  border: 2px solid var(--metal-border);
+  color: var(--metal-text);
+  cursor: pointer;
+  padding: 0.8rem 1.5rem;
+  border-radius: 5px;
+  transition: all 0.2s;
+  box-shadow: 0 4px 8px var(--metal-shadow-color),
+    inset 0 1px 2px rgba(255, 255, 255, 0.1);
+  transform: translateY(0);
+}
+
+.metal-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px var(--metal-shadow-color),
+    inset 0 1px 2px rgba(255, 255, 255, 0.1);
+}
+
+.metal-button:active {
+  transform: translateY(1px);
+  box-shadow: 0 2px 4px var(--metal-shadow-color),
+    inset 0 2px 4px var(--metal-inset-shadow);
+}
+
+/* Metal Card Styles */
+.metal-card {
+  background: var(--metal-card-bg);
+  border: 1px solid var(--metal-card-border);
+  border-radius: 10px;
+  padding: 1rem;
+  box-shadow: 0 4px 8px var(--metal-shadow-color),
+    inset 0 2px 4px var(--metal-inset-shadow);
+  transition: all 0.3s;
+}
+
+/* Metal Text Styles */
+.metal-title {
+  color: var(--metal-text);
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+  text-shadow: 0 0 10px var(--metal-text-shadow);
+}
+
+.metal-subtitle {
+  color: var(--metal-text-secondary);
+  font-size: 1rem;
+}
+
+/* Metal Slider Styles */
+.metal-slider {
+  width: 100%;
+  height: 6px;
+  background: #222;
+  border-radius: 3px;
+  cursor: pointer;
+  position: relative;
+  border: 2px solid var(--metal-border);
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.metal-slider-progress {
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    var(--metal-highlight),
+    var(--metal-accent)
+  );
+  border-radius: 1px;
+  box-shadow: inset 0 2px 4px rgba(255, 255, 255, 0.2);
+}
+
+/* Metal Grid Layout */
+.metal-grid {
+  display: grid;
+  gap: 1.5rem;
+  padding: 1.5rem;
+}
+
+/* Metal Section Styles */
+.metal-section {
+  margin-bottom: 2rem;
+}
+
+.metal-section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+/* Metal Navigation */
+.metal-nav {
+  display: flex;
+  gap: 1rem;
+  padding: 1rem;
+  background: var(--metal-dark);
+  border-bottom: 1px solid var(--metal-border);
+  transition: all 0.3s;
+}
+
+.metal-nav-item {
+  color: var(--metal-text);
+  text-decoration: none;
+  padding: 0.5rem 1rem;
+  border-radius: 5px;
+  transition: all 0.2s;
+}
+
+.metal-nav-item:hover {
+  background: var(--metal-light);
+  transform: translateY(-1px);
+}
+
+/* Metal Album Art */
+.metal-album-art {
+  width: 100%;
+  aspect-ratio: 1;
+  border-radius: 5px;
+  background: var(--metal-dark);
+  position: relative;
+  overflow: hidden;
+  border: 3px solid var(--metal-border);
+  box-shadow: inset 0 0 20px var(--metal-inset-shadow),
+    0 5px 15px var(--metal-shadow-color);
+  transition: all 0.3s;
+}
+
+.metal-album-art::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(45deg, rgba(255, 255, 255, 0.1), transparent);
+}
+
+/* Mobile Side Navigation */
+.mobile-nav-toggle {
+  display: none;
+  position: fixed;
+  top: 1rem;
+  left: 1rem;
+  z-index: 999;
+  background: var(--metal-card-bg);
+  border: 2px solid var(--metal-border);
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 4px 8px var(--metal-shadow-color);
+  transition: all 0.3s;
+}
+
+.mobile-nav-toggle i {
+  font-size: 1.2rem;
+  color: var(--metal-text);
+}
+
+.side-nav {
+  position: fixed;
+  top: 0;
+  left: -280px;
+  width: 280px;
+  height: 100vh;
+  background: var(--metal-card-bg);
+  border-right: 2px solid var(--metal-border);
+  box-shadow: 4px 0 20px var(--metal-shadow-color);
+  z-index: 1000;
+  transition: left 0.3s ease;
+  overflow-y: auto;
+  padding: 1rem;
+}
+
+.side-nav.active {
+  left: 0;
+}
+
+.side-nav-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--metal-border);
+}
+
+.side-nav-logo {
+  font-size: 1.5rem;
+  color: var(--metal-text);
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.side-nav-close {
+  background: none;
+  border: none;
+  color: var(--metal-text);
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 0.5rem;
+}
+
+.side-nav-menu {
+  list-style: none;
+}
+
+.side-nav-item {
+  margin-bottom: 0.5rem;
+}
+
+.side-nav-link {
+  display: flex;
+  align-items: center;
+  padding: 0.8rem 1rem;
+  color: var(--metal-text);
+  text-decoration: none;
+  border-radius: 5px;
+  transition: all 0.2s;
+}
+
+.side-nav-link i {
+  margin-right: 1rem;
+  font-size: 1.2rem;
+}
+
+.side-nav-link:hover {
+  background: var(--metal-light);
+  transform: translateX(5px);
+}
+
+.side-nav-link.active {
+  background: var(--metal-highlight);
+}
+
+/* Overlay for mobile nav */
+.nav-overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 998;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.nav-overlay.active {
+  display: block;
+  opacity: 1;
+}
+
+/* Responsive Styles */
+@media screen and (max-width: 768px) {
+  /* Navigation */
+  .metal-nav {
+    display: none;
+  }
+
+  .mobile-nav-toggle {
+    display: flex;
+  }
+
+  .theme-switch {
+    top: 1rem;
+    right: 1rem;
+  }
+
+  .theme-switch i {
+    font-size: 1.2rem;
+  }
+
+  /* Metal Container */
+  .metal-container {
+    border-radius: 10px;
+  }
+
+  /* Metal Button */
+  .metal-button {
+    padding: 0.6rem 1rem;
+    font-size: 0.9rem;
+  }
+
+  /* Metal Card */
+  .metal-card {
+    padding: 0.8rem;
+  }
+
+  /* Metal Title */
+  .metal-title {
+    font-size: 1.2rem;
+  }
+
+  /* Metal Subtitle */
+  .metal-subtitle {
+    font-size: 0.9rem;
+  }
+
+  /* Metal Section */
+  .metal-section {
+    margin-bottom: 1.5rem;
+  }
+
+  /* Metal Section Header */
+  .metal-section-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .metal-section-header .metal-button {
+    align-self: flex-end;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  /* Navigation */
+  .metal-nav {
+    flex-direction: column;
+    align-items: center;
+    padding: 0.5rem;
+  }
+
+  .metal-nav-item {
+    width: 100%;
+    text-align: center;
+  }
+
+  /* Metal Button */
+  .metal-button {
+    padding: 0.5rem 0.8rem;
+    font-size: 0.8rem;
+  }
+
+  /* Metal Card */
+  .metal-card {
+    padding: 0.6rem;
+  }
+
+  /* Metal Title */
+  .metal-title {
+    font-size: 1.1rem;
+  }
+
+  /* Metal Subtitle */
+  .metal-subtitle {
+    font-size: 0.8rem;
+  }
+
+  /* Metal Album Art */
+  .metal-album-art {
+    border-width: 2px;
+  }
+
+  /* Play Button */
+  .play-button {
+    width: 35px;
+    height: 35px;
+    bottom: 0.5rem;
+    right: 0.5rem;
+  }
+
+  /* Home Container */
+  .home-container {
+    padding-top: 5rem; /* Maintain consistent padding for smaller screens */
+  }
+}
+
+/* Touch Device Optimizations */
+@media (hover: none) {
+  .metal-button:hover,
+  .metal-nav-item:hover,
+  .playlist-card:hover {
+    transform: none;
+  }
+
+  .metal-button:active,
+  .metal-nav-item:active,
+  .playlist-card:active {
+    transform: scale(0.98);
+  }
+
+  .play-button {
+    opacity: 1;
+  }
+}
+
+/* Landscape Mode Optimizations */
+@media screen and (max-height: 500px) and (orientation: landscape) {
+  .metal-nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: var(--metal-dark);
+  }
+
+  .theme-switch {
+    top: 0.5rem;
+  }
+
+  .featured-section {
+    margin-bottom: 1.5rem;
+  }
+}

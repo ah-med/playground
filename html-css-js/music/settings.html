@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings - Metal Player</title>
+    <link rel="stylesheet" href="shared.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* Settings Container Styles */
+        .settings-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Settings Header */
+        .settings-header {
+            margin-bottom: 3rem;
+            text-align: center;
+        }
+
+        .settings-title {
+            font-size: 2.5rem;
+            color: var(--metal-text);
+            margin-bottom: 1rem;
+        }
+
+        .settings-subtitle {
+            color: var(--metal-text-secondary);
+            font-size: 1.1rem;
+        }
+
+        /* Settings Sections */
+        .settings-section {
+            background: var(--metal-card-bg);
+            border: 2px solid var(--metal-border);
+            border-radius: 10px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            color: var(--metal-text);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .section-title i {
+            color: var(--metal-highlight);
+        }
+
+        /* Account Settings */
+        .account-form {
+            display: grid;
+            gap: 1.5rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .form-label {
+            color: var(--metal-text);
+            font-weight: 500;
+        }
+
+        .form-input {
+            padding: 0.8rem;
+            background: var(--metal-bg);
+            border: 2px solid var(--metal-border);
+            border-radius: 5px;
+            color: var(--metal-text);
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--metal-highlight);
+            box-shadow: 0 0 0 2px var(--metal-highlight);
+        }
+
+        .form-input::placeholder {
+            color: var(--metal-text-secondary);
+        }
+
+        /* Privacy Settings */
+        .privacy-options {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .privacy-option {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem;
+            background: var(--metal-bg);
+            border: 2px solid var(--metal-border);
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .privacy-option:hover {
+            background: var(--metal-highlight);
+        }
+
+        .option-info {
+            display: flex;
+            flex-direction: column;
+            gap: 0.3rem;
+        }
+
+        .option-title {
+            color: var(--metal-text);
+            font-weight: 500;
+        }
+
+        .option-description {
+            color: var(--metal-text-secondary);
+            font-size: 0.9rem;
+        }
+
+        /* Notification Settings */
+        .notification-options {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .notification-option {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem;
+            background: var(--metal-bg);
+            border: 2px solid var(--metal-border);
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .notification-option:hover {
+            background: var(--metal-highlight);
+        }
+
+        /* Playback Settings */
+        .playback-options {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .playback-option {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem;
+            background: var(--metal-bg);
+            border: 2px solid var(--metal-border);
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .playback-option:hover {
+            background: var(--metal-highlight);
+        }
+
+        /* Toggle Switch */
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 24px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: var(--metal-border);
+            transition: .4s;
+            border-radius: 24px;
+        }
+
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            left: 4px;
+            bottom: 4px;
+            background-color: var(--metal-bg);
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked+.toggle-slider {
+            background-color: var(--metal-highlight);
+        }
+
+        input:checked+.toggle-slider:before {
+            transform: translateX(26px);
+        }
+
+        /* Save Button */
+        .save-button {
+            display: block;
+            width: 100%;
+            padding: 1rem;
+            background: var(--metal-highlight);
+            border: 2px solid var(--metal-accent);
+            border-radius: 25px;
+            color: var(--metal-text);
+            font-size: 1.1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 2rem;
+        }
+
+        .save-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px var(--metal-shadow-color);
+        }
+
+        /* Responsive Styles */
+        @media screen and (max-width: 768px) {
+            .settings-container {
+                padding-top: 5rem;
+            }
+
+            .settings-header {
+                margin-bottom: 2rem;
+            }
+
+            .settings-title {
+                font-size: 2rem;
+            }
+
+            .settings-section {
+                padding: 1.5rem;
+            }
+
+            .section-title {
+                font-size: 1.3rem;
+            }
+        }
+
+        @media screen and (max-width: 480px) {
+            .settings-container {
+                padding: 5rem 1rem 1rem;
+            }
+
+            .settings-title {
+                font-size: 1.8rem;
+            }
+
+            .settings-section {
+                padding: 1rem;
+            }
+
+            .privacy-option,
+            .notification-option,
+            .playback-option {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.5rem;
+            }
+
+            .toggle-switch {
+                align-self: flex-end;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Mobile Navigation Toggle -->
+    <button class="mobile-nav-toggle" id="mobileNavToggle">
+        <i class="fas fa-bars"></i>
+    </button>
+
+    <!-- Desktop Navigation -->
+    <nav class="metal-nav">
+        <a href="home.html" class="metal-nav-item">Home</a>
+        <a href="search.html" class="metal-nav-item">Search</a>
+        <a href="library.html" class="metal-nav-item">Library</a>
+        <a href="profile.html" class="metal-nav-item">Profile</a>
+        <a href="settings.html" class="metal-nav-item active">Settings</a>
+    </nav>
+
+    <!-- Side Navigation -->
+    <nav class="side-nav" id="sideNav">
+        <div class="side-nav-header">
+            <a href="home.html" class="side-nav-logo">Metal Player</a>
+            <button class="side-nav-close" id="sideNavClose">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <ul class="side-nav-menu">
+            <li class="side-nav-item">
+                <a href="home.html" class="side-nav-link">
+                    <i class="fas fa-home"></i>
+                    Home
+                </a>
+            </li>
+            <li class="side-nav-item">
+                <a href="search.html" class="side-nav-link">
+                    <i class="fas fa-search"></i>
+                    Search
+                </a>
+            </li>
+            <li class="side-nav-item">
+                <a href="library.html" class="side-nav-link">
+                    <i class="fas fa-music"></i>
+                    Library
+                </a>
+            </li>
+            <li class="side-nav-item">
+                <a href="profile.html" class="side-nav-link">
+                    <i class="fas fa-user"></i>
+                    Profile
+                </a>
+            </li>
+            <li class="side-nav-item">
+                <a href="settings.html" class="side-nav-link active">
+                    <i class="fas fa-cog"></i>
+                    Settings
+                </a>
+            </li>
+        </ul>
+    </nav>
+
+    <!-- Navigation Overlay -->
+    <div class="nav-overlay" id="navOverlay"></div>
+
+    <!-- Theme Switch Button -->
+    <button class="theme-switch" id="themeSwitch">
+        <i class="fas fa-sun"></i>
+    </button>
+
+    <!-- Settings Container -->
+    <div class="settings-container">
+        <!-- Settings Header -->
+        <div class="settings-header">
+            <h1 class="settings-title">Settings</h1>
+            <p class="settings-subtitle">Customize your Metal Player experience</p>
+        </div>
+
+        <!-- Account Settings -->
+        <div class="settings-section">
+            <h2 class="section-title">
+                <i class="fas fa-user-circle"></i>
+                Account Settings
+            </h2>
+            <form class="account-form">
+                <div class="form-group">
+                    <label class="form-label">Display Name</label>
+                    <input type="text" class="form-input" placeholder="Enter your display name">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Email</label>
+                    <input type="email" class="form-input" placeholder="Enter your email">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Current Password</label>
+                    <input type="password" class="form-input" placeholder="Enter current password">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">New Password</label>
+                    <input type="password" class="form-input" placeholder="Enter new password">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Confirm New Password</label>
+                    <input type="password" class="form-input" placeholder="Confirm new password">
+                </div>
+            </form>
+        </div>
+
+        <!-- Privacy Settings -->
+        <div class="settings-section">
+            <h2 class="section-title">
+                <i class="fas fa-shield-alt"></i>
+                Privacy Settings
+            </h2>
+            <div class="privacy-options">
+                <div class="privacy-option">
+                    <div class="option-info">
+                        <div class="option-title">Profile Visibility</div>
+                        <div class="option-description">Control who can see your profile and activity</div>
+                    </div>
+                    <label class="toggle-switch">
+                        <input type="checkbox" checked>
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+                <div class="privacy-option">
+                    <div class="option-info">
+                        <div class="option-title">Listening Activity</div>
+                        <div class="option-description">Show what you're listening to on your profile</div>
+                    </div>
+                    <label class="toggle-switch">
+                        <input type="checkbox" checked>
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+                <div class="privacy-option">
+                    <div class="option-info">
+                        <div class="option-title">Playlist Visibility</div>
+                        <div class="option-description">Control who can see your playlists</div>
+                    </div>
+                    <label class="toggle-switch">
+                        <input type="checkbox" checked>
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <!-- Notification Settings -->
+        <div class="settings-section">
+            <h2 class="section-title">
+                <i class="fas fa-bell"></i>
+                Notification Settings
+            </h2>
+            <div class="notification-options">
+                <div class="notification-option">
+                    <div class="option-info">
+                        <div class="option-title">Email Notifications</div>
+                        <div class="option-description">Receive updates via email</div>
+                    </div>
+                    <label class="toggle-switch">
+                        <input type="checkbox" checked>
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+                <div class="notification-option">
+                    <div class="option-info">
+                        <div class="option-title">Push Notifications</div>
+                        <div class="option-description">Receive updates on your device</div>
+                    </div>
+                    <label class="toggle-switch">
+                        <input type="checkbox" checked>
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+                <div class="notification-option">
+                    <div class="option-info">
+                        <div class="option-title">New Releases</div>
+                        <div class="option-description">Get notified about new music from your favorite artists</div>
+                    </div>
+                    <label class="toggle-switch">
+                        <input type="checkbox" checked>
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <!-- Playback Settings -->
+        <div class="settings-section">
+            <h2 class="section-title">
+                <i class="fas fa-play-circle"></i>
+                Playback Settings
+            </h2>
+            <div class="playback-options">
+                <div class="playback-option">
+                    <div class="option-info">
+                        <div class="option-title">Crossfade</div>
+                        <div class="option-description">Smooth transition between tracks</div>
+                    </div>
+                    <label class="toggle-switch">
+                        <input type="checkbox" checked>
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+                <div class="playback-option">
+                    <div class="option-info">
+                        <div class="option-title">Gapless Playback</div>
+                        <div class="option-description">Remove gaps between tracks</div>
+                    </div>
+                    <label class="toggle-switch">
+                        <input type="checkbox" checked>
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+                <div class="playback-option">
+                    <div class="option-info">
+                        <div class="option-title">Normalize Volume</div>
+                        <div class="option-description">Adjust volume levels for consistent playback</div>
+                    </div>
+                    <label class="toggle-switch">
+                        <input type="checkbox" checked>
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <!-- Save Button -->
+        <button class="save-button">Save Changes</button>
+    </div>
+
+    <script>
+        // Theme Switching
+        const themeSwitch = document.getElementById('themeSwitch');
+        const icon = themeSwitch.querySelector('i');
+
+        function setTheme(theme) {
+            document.documentElement.setAttribute('data-theme', theme);
+            localStorage.setItem('theme', theme);
+            updateIcon(theme);
+        }
+
+        function updateIcon(theme) {
+            icon.className = theme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+        }
+
+        // Check for saved theme preference
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme) {
+            setTheme(savedTheme);
+        } else {
+            // Check system preference
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            setTheme(prefersDark ? 'dark' : 'light');
+        }
+
+        themeSwitch.addEventListener('click', () => {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            setTheme(newTheme);
+        });
+
+        // Mobile Navigation
+        const mobileNavToggle = document.getElementById('mobileNavToggle');
+        const sideNav = document.getElementById('sideNav');
+        const sideNavClose = document.getElementById('sideNavClose');
+        const navOverlay = document.getElementById('navOverlay');
+
+        function toggleSideNav() {
+            sideNav.classList.toggle('active');
+            navOverlay.classList.toggle('active');
+            document.body.style.overflow = sideNav.classList.contains('active') ? 'hidden' : '';
+        }
+
+        mobileNavToggle.addEventListener('click', toggleSideNav);
+        sideNavClose.addEventListener('click', toggleSideNav);
+        navOverlay.addEventListener('click', toggleSideNav);
+
+        // Close side nav when clicking a link
+        document.querySelectorAll('.side-nav-link').forEach(link => {
+            link.addEventListener('click', () => {
+                if (sideNav.classList.contains('active')) {
+                    toggleSideNav();
+                }
+            });
+        });
+
+        // Save Changes
+        document.querySelector('.save-button').addEventListener('click', () => {
+            // Here you would typically send the form data to your backend
+            alert('Settings saved successfully!');
+        });
+    </script>
+</body>
+
+</html>
