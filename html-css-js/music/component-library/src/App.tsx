@@ -109,15 +109,22 @@ export function App() {
               <AlbumCard
                 title="The Number of the Beast"
                 artist="Iron Maiden"
-                imageUrl="https://via.placeholder.com/300"
+                imageUrl="https://images.unsplash.com/photo-1511379938547-c1f69419868d?w=300&h=300&fit=crop"
                 year="1982"
               />
               <AlbumCard
                 title="Piece of Mind"
                 artist="Iron Maiden"
-                imageUrl="https://via.placeholder.com/300"
+                imageUrl="https://images.unsplash.com/photo-1511379938547-c1f69419868d?w=300&h=300&fit=crop"
                 year="1983"
                 duration="45:30"
+              />
+              <AlbumCard
+                title="Powerslave"
+                artist="Iron Maiden"
+                imageUrl="https://images.unsplash.com/photo-1511379938547-c1f69419868d?w=300&h=300&fit=crop"
+                year="1984"
+                className="w-64"
               />
             </div>
           </div>

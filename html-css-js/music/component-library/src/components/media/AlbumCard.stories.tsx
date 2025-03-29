@@ -17,7 +17,7 @@ export const Default: Story = {
     args: {
         title: "The Number of the Beast",
         artist: "Iron Maiden",
-        imageUrl: "https://via.placeholder.com/300",
+        imageUrl: "https://images.unsplash.com/photo-1511379938547-c1f69419868d?w=300&h=300&fit=crop",
         year: "1982",
     },
 }
@@ -26,7 +26,7 @@ export const WithDuration: Story = {
     args: {
         title: "Piece of Mind",
         artist: "Iron Maiden",
-        imageUrl: "https://via.placeholder.com/300",
+        imageUrl: "https://images.unsplash.com/photo-1511379938547-c1f69419868d?w=300&h=300&fit=crop",
         year: "1983",
         duration: "45:30",
     },
@@ -36,17 +36,17 @@ export const WithCustomSize: Story = {
     args: {
         title: "Powerslave",
         artist: "Iron Maiden",
-        imageUrl: "https://via.placeholder.com/300",
+        imageUrl: "https://images.unsplash.com/photo-1511379938547-c1f69419868d?w=300&h=300&fit=crop",
         year: "1984",
-        className: "w-64",
+        size: "lg",
     },
 }
 
 export const WithLongTitle: Story = {
     args: {
-        title: "Somewhere in Time - 30th Anniversary Special Edition",
+        title: "Somewhere in Time - The Complete Collection",
         artist: "Iron Maiden",
-        imageUrl: "https://via.placeholder.com/300",
+        imageUrl: "https://images.unsplash.com/photo-1511379938547-c1f69419868d?w=300&h=300&fit=crop",
         year: "1986",
     },
 }
@@ -54,8 +54,8 @@ export const WithLongTitle: Story = {
 export const WithLongArtist: Story = {
     args: {
         title: "Seventh Son of a Seventh Son",
-        artist: "Iron Maiden featuring Bruce Dickinson and Steve Harris",
-        imageUrl: "https://via.placeholder.com/300",
+        artist: "Iron Maiden - The Complete Collection",
+        imageUrl: "https://images.unsplash.com/photo-1511379938547-c1f69419868d?w=300&h=300&fit=crop",
         year: "1988",
     },
 } 
