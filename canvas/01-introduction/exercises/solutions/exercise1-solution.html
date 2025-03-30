@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Canvas Exercise 1 - Solution</title>
+    <style>
+        canvas {
+            border: 2px solid black;
+        }
+
+        .error {
+            color: red;
+            font-size: 18px;
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="myCanvas" width="600" height="400">
+        Your browser does not support canvas.
+    </canvas>
+
+    <script>
+        // Canvas setup and error handling
+        const canvas = document.getElementById('myCanvas');
+        if (!canvas.getContext) {
+            const error = document.createElement('div');
+            error.className = 'error';
+            error.textContent = 'Canvas is not supported in your browser';
+            canvas.parentNode.replaceChild(error, canvas);
+            throw new Error('Canvas not supported');
+        }
+
+        const ctx = canvas.getContext('2d');
+
+        // Set white background
+        ctx.fillStyle = 'white';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        // Add title text
+        ctx.fillStyle = 'black';
+        ctx.font = '24px Arial';
+        ctx.textAlign = 'center';
+        ctx.fillText('My First Canvas', canvas.width / 2, 30);
+
+        // Draw blue rectangle
+        ctx.fillStyle = 'blue';
+        ctx.fillRect(50, 50, 100, 100);
+
+        // Draw red circle
+        ctx.beginPath();
+        ctx.fillStyle = 'red';
+        ctx.arc(250, 200, 50, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Draw green triangle
+        ctx.beginPath();
+        ctx.fillStyle = 'green';
+        ctx.moveTo(400, 300);
+        ctx.lineTo(450, 200);
+        ctx.lineTo(500, 300);
+        ctx.closePath();
+        ctx.fill();
+    </script>
+</body>
+
+</html>
