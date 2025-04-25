@@ -36,6 +36,14 @@ jobs:
           cp html-css-js/404.html dist/404.html
           cp html-css-js/index.html dist/index.html
 
+      - name: Copy Other html-css-js files excluding 404.html, Readme.md and index.html
+        run: |
+          mkdir -p dist/html-css-js
+          cp -r html-css-js/* dist/html-css-js/
+          rm -rf dist/html-css-js/404.html
+          rm -rf dist/html-css-js/index.html
+          rm -rf dist/html-css-js/Readme.md
+
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
         with:
