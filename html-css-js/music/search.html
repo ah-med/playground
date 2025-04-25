@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search - Metal Player</title>
+    <link rel="stylesheet" href="shared.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* Search Container Styles */
+        .search-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Search Header */
+        .search-header {
+            margin-bottom: 3rem;
+        }
+
+        .search-title {
+            font-size: 2.5rem;
+            color: var(--metal-text);
+            margin-bottom: 1rem;
+        }
+
+        .search-subtitle {
+            color: var(--metal-text-secondary);
+            font-size: 1.1rem;
+            max-width: 600px;
+        }
+
+        /* Search Bar */
+        .search-bar {
+            position: relative;
+            margin-bottom: 2rem;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 1rem 3rem 1rem 1.5rem;
+            background: var(--metal-card-bg);
+            border: 2px solid var(--metal-border);
+            border-radius: 10px;
+            color: var(--metal-text);
+            font-size: 1.1rem;
+            transition: all 0.3s;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--metal-highlight);
+            box-shadow: 0 0 0 3px var(--metal-shadow-color);
+        }
+
+        .search-icon {
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--metal-text-secondary);
+            font-size: 1.2rem;
+        }
+
+        /* Search Filters */
+        .search-filters {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-button {
+            padding: 0.5rem 1rem;
+            background: var(--metal-bg);
+            border: 2px solid var(--metal-border);
+            border-radius: 20px;
+            color: var(--metal-text);
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .filter-button:hover {
+            background: var(--metal-highlight);
+        }
+
+        .filter-button.active {
+            background: var(--metal-highlight);
+            border-color: var(--metal-accent);
+        }
+
+        /* Search Results */
+        .search-results {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .result-card {
+            background: var(--metal-card-bg);
+            border: 2px solid var(--metal-border);
+            border-radius: 10px;
+            overflow: hidden;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .result-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px var(--metal-shadow-color);
+        }
+
+        .result-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .result-content {
+            padding: 1.5rem;
+        }
+
+        .result-title {
+            font-size: 1.2rem;
+            color: var(--metal-text);
+            margin-bottom: 0.5rem;
+        }
+
+        .result-subtitle {
+            color: var(--metal-text-secondary);
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        .result-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: var(--metal-text-secondary);
+            font-size: 0.9rem;
+        }
+
+        /* Recent Searches */
+        .recent-searches {
+            margin-bottom: 3rem;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            color: var(--metal-text);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .section-title i {
+            color: var(--metal-highlight);
+        }
+
+        .recent-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .recent-item {
+            padding: 0.5rem 1rem;
+            background: var(--metal-bg);
+            border: 2px solid var(--metal-border);
+            border-radius: 20px;
+            color: var(--metal-text);
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .recent-item:hover {
+            background: var(--metal-highlight);
+        }
+
+        /* Search Categories */
+        .search-categories {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .category-card {
+            background: var(--metal-card-bg);
+            border: 2px solid var(--metal-border);
+            border-radius: 10px;
+            padding: 1.5rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .category-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px var(--metal-shadow-color);
+        }
+
+        .category-icon {
+            width: 60px;
+            height: 60px;
+            background: var(--metal-highlight);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            color: var(--metal-text);
+            font-size: 1.5rem;
+        }
+
+        .category-title {
+            color: var(--metal-text);
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+        }
+
+        .category-count {
+            color: var(--metal-text-secondary);
+            font-size: 0.9rem;
+        }
+
+        /* Responsive Styles */
+        @media screen and (max-width: 768px) {
+            .search-container {
+                padding-top: 5rem;
+            }
+
+            .search-header {
+                margin-bottom: 2rem;
+            }
+
+            .search-title {
+                font-size: 2rem;
+            }
+
+            .search-filters {
+                flex-wrap: wrap;
+            }
+
+            .search-results {
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            }
+        }
+
+        @media screen and (max-width: 480px) {
+            .search-container {
+                padding: 5rem 1rem 1rem;
+            }
+
+            .search-title {
+                font-size: 1.8rem;
+            }
+
+            .search-results {
+                grid-template-columns: 1fr;
+            }
+
+            .category-card {
+                margin-bottom: 1rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Mobile Navigation Toggle -->
+    <button class="mobile-nav-toggle" id="mobileNavToggle">
+        <i class="fas fa-bars"></i>
+    </button>
+
+    <!-- Desktop Navigation -->
+    <nav class="metal-nav">
+        <a href="home.html" class="metal-nav-item">Home</a>
+        <a href="search.html" class="metal-nav-item">Search</a>
+        <a href="library.html" class="metal-nav-item">Library</a>
+        <a href="profile.html" class="metal-nav-item">Profile</a>
+        <a href="settings.html" class="metal-nav-item">Settings</a>
+    </nav>
+
+    <!-- Side Navigation -->
+    <nav class="side-nav" id="sideNav">
+        <div class="side-nav-header">
+            <a href="home.html" class="side-nav-logo">Metal Player</a>
+            <button class="side-nav-close" id="sideNavClose">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <ul class="side-nav-menu">
+            <li class="side-nav-item">
+                <a href="home.html" class="side-nav-link">
+                    <i class="fas fa-home"></i>
+                    Home
+                </a>
+            </li>
+            <li class="side-nav-item">
+                <a href="search.html" class="side-nav-link">
+                    <i class="fas fa-search"></i>
+                    Search
+                </a>
+            </li>
+            <li class="side-nav-item">
+                <a href="library.html" class="side-nav-link">
+                    <i class="fas fa-music"></i>
+                    Library
+                </a>
+            </li>
+            <li class="side-nav-item">
+                <a href="profile.html" class="side-nav-link">
+                    <i class="fas fa-user"></i>
+                    Profile
+                </a>
+            </li>
+            <li class="side-nav-item">
+                <a href="settings.html" class="side-nav-link">
+                    <i class="fas fa-cog"></i>
+                    Settings
+                </a>
+            </li>
+        </ul>
+    </nav>
+
+    <!-- Navigation Overlay -->
+    <div class="nav-overlay" id="navOverlay"></div>
+
+    <!-- Theme Switch Button -->
+    <button class="theme-switch" id="themeSwitch">
+        <i class="fas fa-sun"></i>
+    </button>
+
+    <!-- Search Container -->
+    <div class="search-container">
+        <!-- Search Header -->
+        <div class="search-header">
+            <h1 class="search-title">Search</h1>
+            <p class="search-subtitle">
+                Find your favorite music, artists, albums, and playlists. Start typing to begin your search.
+            </p>
+        </div>
+
+        <!-- Search Bar -->
+        <div class="search-bar">
+            <input type="text" class="search-input" placeholder="Search for songs, artists, albums, or playlists...">
+            <i class="fas fa-search search-icon"></i>
+        </div>
+
+        <!-- Search Filters -->
+        <div class="search-filters">
+            <button class="filter-button active">All</button>
+            <button class="filter-button">Songs</button>
+            <button class="filter-button">Artists</button>
+            <button class="filter-button">Albums</button>
+            <button class="filter-button">Playlists</button>
+            <button class="filter-button">Podcasts</button>
+        </div>
+
+        <!-- Recent Searches -->
+        <div class="recent-searches">
+            <h2 class="section-title">
+                <i class="fas fa-history"></i>
+                Recent Searches
+            </h2>
+            <div class="recent-list">
+                <div class="recent-item">
+                    <i class="fas fa-clock"></i>
+                    Iron Maiden
+                </div>
+                <div class="recent-item">
+                    <i class="fas fa-clock"></i>
+                    The Trooper
+                </div>
+                <div class="recent-item">
+                    <i class="fas fa-clock"></i>
+                    Heavy Metal
+                </div>
+                <div class="recent-item">
+                    <i class="fas fa-clock"></i>
+                    Rock Playlist
+                </div>
+            </div>
+        </div>
+
+        <!-- Search Categories -->
+        <div class="search-categories">
+            <div class="category-card">
+                <div class="category-icon">
+                    <i class="fas fa-music"></i>
+                </div>
+                <div class="category-title">Metal</div>
+                <div class="category-count">500+ songs</div>
+            </div>
+            <div class="category-card">
+                <div class="category-icon">
+                    <i class="fas fa-guitar"></i>
+                </div>
+                <div class="category-title">Rock</div>
+                <div class="category-count">800+ songs</div>
+            </div>
+            <div class="category-card">
+                <div class="category-icon">
+                    <i class="fas fa-drum"></i>
+                </div>
+                <div class="category-title">Punk</div>
+                <div class="category-count">300+ songs</div>
+            </div>
+            <div class="category-card">
+                <div class="category-icon">
+                    <i class="fas fa-microphone"></i>
+                </div>
+                <div class="category-title">Podcasts</div>
+                <div class="category-count">200+ shows</div>
+            </div>
+        </div>
+
+        <!-- Search Results -->
+        <div class="search-results">
+            <!-- Result 1 -->
+            <div class="result-card">
+                <img src="https://via.placeholder.com/300x200" alt="Result 1" class="result-image">
+                <div class="result-content">
+                    <div class="result-title">The Trooper</div>
+                    <div class="result-subtitle">Iron Maiden</div>
+                    <div class="result-meta">
+                        <span>Album: Piece of Mind</span>
+                        <span>4:12</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Result 2 -->
+            <div class="result-card">
+                <img src="https://via.placeholder.com/300x200" alt="Result 2" class="result-image">
+                <div class="result-content">
+                    <div class="result-title">Run to the Hills</div>
+                    <div class="result-subtitle">Iron Maiden</div>
+                    <div class="result-meta">
+                        <span>Album: The Number of the Beast</span>
+                        <span>3:53</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Result 3 -->
+            <div class="result-card">
+                <img src="https://via.placeholder.com/300x200" alt="Result 3" class="result-image">
+                <div class="result-content">
+                    <div class="result-title">Fear of the Dark</div>
+                    <div class="result-subtitle">Iron Maiden</div>
+                    <div class="result-meta">
+                        <span>Album: Fear of the Dark</span>
+                        <span>7:18</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Theme Switching
+        const themeSwitch = document.getElementById('themeSwitch');
+        const icon = themeSwitch.querySelector('i');
+
+        function setTheme(theme) {
+            document.documentElement.setAttribute('data-theme', theme);
+            localStorage.setItem('theme', theme);
+            updateIcon(theme);
+        }
+
+        function updateIcon(theme) {
+            icon.className = theme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+        }
+
+        // Check for saved theme preference
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme) {
+            setTheme(savedTheme);
+        } else {
+            // Check system preference
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            setTheme(prefersDark ? 'dark' : 'light');
+        }
+
+        themeSwitch.addEventListener('click', () => {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            setTheme(newTheme);
+        });
+
+        // Mobile Navigation
+        const mobileNavToggle = document.getElementById('mobileNavToggle');
+        const sideNav = document.getElementById('sideNav');
+        const sideNavClose = document.getElementById('sideNavClose');
+        const navOverlay = document.getElementById('navOverlay');
+
+        function toggleSideNav() {
+            sideNav.classList.toggle('active');
+            navOverlay.classList.toggle('active');
+            document.body.style.overflow = sideNav.classList.contains('active') ? 'hidden' : '';
+        }
+
+        mobileNavToggle.addEventListener('click', toggleSideNav);
+        sideNavClose.addEventListener('click', toggleSideNav);
+        navOverlay.addEventListener('click', toggleSideNav);
+
+        // Close side nav when clicking a link
+        document.querySelectorAll('.side-nav-link').forEach(link => {
+            link.addEventListener('click', () => {
+                if (sideNav.classList.contains('active')) {
+                    toggleSideNav();
+                }
+            });
+        });
+
+        // Search Filters
+        const filterButtons = document.querySelectorAll('.filter-button');
+        filterButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                filterButtons.forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+                // Here you would typically filter the search results based on the selected category
+            });
+        });
+
+        // Recent Search Items
+        document.querySelectorAll('.recent-item').forEach(item => {
+            item.addEventListener('click', () => {
+                const searchTerm = item.textContent.trim();
+                document.querySelector('.search-input').value = searchTerm;
+                // Here you would typically perform the search with the selected term
+            });
+        });
+
+        // Search Input
+        const searchInput = document.querySelector('.search-input');
+        let searchTimeout;
+
+        searchInput.addEventListener('input', () => {
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(() => {
+                const searchTerm = searchInput.value.trim();
+                if (searchTerm) {
+                    // Here you would typically perform the search with the entered term
+                    console.log('Searching for:', searchTerm);
+                }
+            }, 500);
+        });
+
+        // Result Cards
+        document.querySelectorAll('.result-card').forEach(card => {
+            card.addEventListener('click', () => {
+                // Here you would typically navigate to the selected item's page
+                alert('Opening item...');
+            });
+        });
+
+        // Category Cards
+        document.querySelectorAll('.category-card').forEach(card => {
+            card.addEventListener('click', () => {
+                const category = card.querySelector('.category-title').textContent;
+                // Here you would typically filter results by the selected category
+                alert(`Filtering by ${category}...`);
+            });
+        });
+    </script>
+</body>
+
+</html>

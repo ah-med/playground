@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Events - Metal Player</title>
+    <link rel="stylesheet" href="shared.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* Events Container Styles */
+        .events-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Events Header */
+        .events-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .events-title {
+            font-size: 2.5rem;
+            color: var(--metal-text);
+            margin-bottom: 1rem;
+        }
+
+        .events-subtitle {
+            color: var(--metal-text-secondary);
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Events Grid */
+        .events-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .event-card {
+            background: var(--metal-card-bg);
+            border: 2px solid var(--metal-border);
+            border-radius: 10px;
+            overflow: hidden;
+            transition: all 0.3s;
+        }
+
+        .event-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px var(--metal-shadow-color);
+        }
+
+        .event-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .event-content {
+            padding: 1.5rem;
+        }
+
+        .event-date {
+            color: var(--metal-highlight);
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .event-title {
+            font-size: 1.5rem;
+            color: var(--metal-text);
+            margin-bottom: 0.5rem;
+        }
+
+        .event-location {
+            color: var(--metal-text-secondary);
+            font-size: 1rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .event-description {
+            color: var(--metal-text-secondary);
+            font-size: 0.9rem;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+
+        .event-actions {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .event-button {
+            flex: 1;
+            padding: 0.8rem;
+            background: var(--metal-bg);
+            border: 2px solid var(--metal-border);
+            border-radius: 5px;
+            color: var(--metal-text);
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .event-button:hover {
+            background: var(--metal-highlight);
+        }
+
+        .event-button.primary {
+            background: var(--metal-highlight);
+            border-color: var(--metal-accent);
+        }
+
+        .event-button.primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px var(--metal-shadow-color);
+        }
+
+        /* Event Filters */
+        .event-filters {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-button {
+            padding: 0.5rem 1rem;
+            background: var(--metal-bg);
+            border: 2px solid var(--metal-border);
+            border-radius: 20px;
+            color: var(--metal-text);
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .filter-button:hover {
+            background: var(--metal-highlight);
+        }
+
+        .filter-button.active {
+            background: var(--metal-highlight);
+            border-color: var(--metal-accent);
+        }
+
+        /* Event Map */
+        .event-map {
+            background: var(--metal-card-bg);
+            border: 2px solid var(--metal-border);
+            border-radius: 10px;
+            padding: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .map-title {
+            font-size: 1.5rem;
+            color: var(--metal-text);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .map-title i {
+            color: var(--metal-highlight);
+        }
+
+        .map-container {
+            width: 100%;
+            height: 400px;
+            background: var(--metal-bg);
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--metal-text-secondary);
+        }
+
+        /* Event Categories */
+        .event-categories {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .category-card {
+            background: var(--metal-card-bg);
+            border: 2px solid var(--metal-border);
+            border-radius: 10px;
+            padding: 1.5rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .category-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px var(--metal-shadow-color);
+        }
+
+        .category-icon {
+            width: 60px;
+            height: 60px;
+            background: var(--metal-highlight);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            color: var(--metal-text);
+            font-size: 1.5rem;
+        }
+
+        .category-title {
+            color: var(--metal-text);
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+        }
+
+        .category-count {
+            color: var(--metal-text-secondary);
+            font-size: 0.9rem;
+        }
+
+        /* Responsive Styles */
+        @media screen and (max-width: 768px) {
+            .events-container {
+                padding-top: 5rem;
+            }
+
+            .events-header {
+                margin-bottom: 2rem;
+            }
+
+            .events-title {
+                font-size: 2rem;
+            }
+
+            .event-filters {
+                flex-wrap: wrap;
+            }
+
+            .map-container {
+                height: 300px;
+            }
+        }
+
+        @media screen and (max-width: 480px) {
+            .events-container {
+                padding: 5rem 1rem 1rem;
+            }
+
+            .events-title {
+                font-size: 1.8rem;
+            }
+
+            .event-card {
+                margin-bottom: 1.5rem;
+            }
+
+            .event-actions {
+                flex-direction: column;
+            }
+
+            .map-container {
+                height: 250px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Mobile Navigation Toggle -->
+    <button class="mobile-nav-toggle" id="mobileNavToggle">
+        <i class="fas fa-bars"></i>
+    </button>
+
+    <!-- Desktop Navigation -->
+    <nav class="metal-nav">
+        <a href="home.html" class="metal-nav-item">Home</a>
+        <a href="search.html" class="metal-nav-item">Search</a>
+        <a href="library.html" class="metal-nav-item">Library</a>
+        <a href="profile.html" class="metal-nav-item">Profile</a>
+        <a href="settings.html" class="metal-nav-item">Settings</a>
+    </nav>
+
+    <!-- Side Navigation -->
+    <nav class="side-nav" id="sideNav">
+        <div class="side-nav-header">
+            <a href="home.html" class="side-nav-logo">Metal Player</a>
+            <button class="side-nav-close" id="sideNavClose">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <ul class="side-nav-menu">
+            <li class="side-nav-item">
+                <a href="home.html" class="side-nav-link">
+                    <i class="fas fa-home"></i>
+                    Home
+                </a>
+            </li>
+            <li class="side-nav-item">
+                <a href="search.html" class="side-nav-link">
+                    <i class="fas fa-search"></i>
+                    Search
+                </a>
+            </li>
+            <li class="side-nav-item">
+                <a href="library.html" class="side-nav-link">
+                    <i class="fas fa-music"></i>
+                    Library
+                </a>
+            </li>
+            <li class="side-nav-item">
+                <a href="profile.html" class="side-nav-link">
+                    <i class="fas fa-user"></i>
+                    Profile
+                </a>
+            </li>
+            <li class="side-nav-item">
+                <a href="settings.html" class="side-nav-link">
+                    <i class="fas fa-cog"></i>
+                    Settings
+                </a>
+            </li>
+        </ul>
+    </nav>
+
+    <!-- Navigation Overlay -->
+    <div class="nav-overlay" id="navOverlay"></div>
+
+    <!-- Theme Switch Button -->
+    <button class="theme-switch" id="themeSwitch">
+        <i class="fas fa-sun"></i>
+    </button>
+
+    <!-- Events Container -->
+    <div class="events-container">
+        <!-- Events Header -->
+        <div class="events-header">
+            <h1 class="events-title">Upcoming Events</h1>
+            <p class="events-subtitle">
+                Discover live concerts, festivals, and music events near you. Get tickets and never miss your favorite
+                artists.
+            </p>
+        </div>
+
+        <!-- Event Filters -->
+        <div class="event-filters">
+            <button class="filter-button active">All Events</button>
+            <button class="filter-button">Concerts</button>
+            <button class="filter-button">Festivals</button>
+            <button class="filter-button">Meet & Greets</button>
+            <button class="filter-button">Virtual Events</button>
+        </div>
+
+        <!-- Event Categories -->
+        <div class="event-categories">
+            <div class="category-card">
+                <div class="category-icon">
+                    <i class="fas fa-music"></i>
+                </div>
+                <div class="category-title">Concerts</div>
+                <div class="category-count">12 upcoming events</div>
+            </div>
+            <div class="category-card">
+                <div class="category-icon">
+                    <i class="fas fa-calendar-alt"></i>
+                </div>
+                <div class="category-title">Festivals</div>
+                <div class="category-count">5 upcoming events</div>
+            </div>
+            <div class="category-card">
+                <div class="category-icon">
+                    <i class="fas fa-users"></i>
+                </div>
+                <div class="category-title">Meet & Greets</div>
+                <div class="category-count">3 upcoming events</div>
+            </div>
+            <div class="category-card">
+                <div class="category-icon">
+                    <i class="fas fa-video"></i>
+                </div>
+                <div class="category-title">Virtual Events</div>
+                <div class="category-count">8 upcoming events</div>
+            </div>
+        </div>
+
+        <!-- Events Grid -->
+        <div class="events-grid">
+            <!-- Event Card 1 -->
+            <div class="event-card">
+                <img src="https://via.placeholder.com/400x200" alt="Event 1" class="event-image">
+                <div class="event-content">
+                    <div class="event-date">June 15, 2024 • 8:00 PM</div>
+                    <h3 class="event-title">Summer Music Festival</h3>
+                    <div class="event-location">
+                        <i class="fas fa-map-marker-alt"></i>
+                        Central Park, New York
+                    </div>
+                    <p class="event-description">
+                        Join us for an unforgettable night of music featuring top artists from around the world.
+                    </p>
+                    <div class="event-actions">
+                        <button class="event-button primary">
+                            <i class="fas fa-ticket-alt"></i>
+                            Get Tickets
+                        </button>
+                        <button class="event-button">
+                            <i class="fas fa-share-alt"></i>
+                            Share
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Event Card 2 -->
+            <div class="event-card">
+                <img src="https://via.placeholder.com/400x200" alt="Event 2" class="event-image">
+                <div class="event-content">
+                    <div class="event-date">June 20, 2024 • 7:30 PM</div>
+                    <h3 class="event-title">Artist Name Live</h3>
+                    <div class="event-location">
+                        <i class="fas fa-map-marker-alt"></i>
+                        Madison Square Garden, NY
+                    </div>
+                    <p class="event-description">
+                        Experience an intimate evening with one of the world's most popular artists.
+                    </p>
+                    <div class="event-actions">
+                        <button class="event-button primary">
+                            <i class="fas fa-ticket-alt"></i>
+                            Get Tickets
+                        </button>
+                        <button class="event-button">
+                            <i class="fas fa-share-alt"></i>
+                            Share
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Event Card 3 -->
+            <div class="event-card">
+                <img src="https://via.placeholder.com/400x200" alt="Event 3" class="event-image">
+                <div class="event-content">
+                    <div class="event-date">June 25, 2024 • 6:00 PM</div>
+                    <h3 class="event-title">Virtual Concert</h3>
+                    <div class="event-location">
+                        <i class="fas fa-globe"></i>
+                        Online Event
+                    </div>
+                    <p class="event-description">
+                        Watch your favorite artist perform live from the comfort of your home.
+                    </p>
+                    <div class="event-actions">
+                        <button class="event-button primary">
+                            <i class="fas fa-ticket-alt"></i>
+                            Get Tickets
+                        </button>
+                        <button class="event-button">
+                            <i class="fas fa-share-alt"></i>
+                            Share
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Event Map -->
+        <div class="event-map">
+            <h2 class="map-title">
+                <i class="fas fa-map-marked-alt"></i>
+                Event Locations
+            </h2>
+            <div class="map-container">
+                <i class="fas fa-map fa-3x"></i>
+                <p>Interactive map will be displayed here</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Theme Switching
+        const themeSwitch = document.getElementById('themeSwitch');
+        const icon = themeSwitch.querySelector('i');
+
+        function setTheme(theme) {
+            document.documentElement.setAttribute('data-theme', theme);
+            localStorage.setItem('theme', theme);
+            updateIcon(theme);
+        }
+
+        function updateIcon(theme) {
+            icon.className = theme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+        }
+
+        // Check for saved theme preference
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme) {
+            setTheme(savedTheme);
+        } else {
+            // Check system preference
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            setTheme(prefersDark ? 'dark' : 'light');
+        }
+
+        themeSwitch.addEventListener('click', () => {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            setTheme(newTheme);
+        });
+
+        // Mobile Navigation
+        const mobileNavToggle = document.getElementById('mobileNavToggle');
+        const sideNav = document.getElementById('sideNav');
+        const sideNavClose = document.getElementById('sideNavClose');
+        const navOverlay = document.getElementById('navOverlay');
+
+        function toggleSideNav() {
+            sideNav.classList.toggle('active');
+            navOverlay.classList.toggle('active');
+            document.body.style.overflow = sideNav.classList.contains('active') ? 'hidden' : '';
+        }
+
+        mobileNavToggle.addEventListener('click', toggleSideNav);
+        sideNavClose.addEventListener('click', toggleSideNav);
+        navOverlay.addEventListener('click', toggleSideNav);
+
+        // Close side nav when clicking a link
+        document.querySelectorAll('.side-nav-link').forEach(link => {
+            link.addEventListener('click', () => {
+                if (sideNav.classList.contains('active')) {
+                    toggleSideNav();
+                }
+            });
+        });
+
+        // Event Filters
+        const filterButtons = document.querySelectorAll('.filter-button');
+        filterButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                filterButtons.forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+                // Here you would typically filter the events based on the selected category
+            });
+        });
+
+        // Event Card Actions
+        document.querySelectorAll('.event-button').forEach(button => {
+            button.addEventListener('click', (e) => {
+                e.stopPropagation();
+                if (button.classList.contains('primary')) {
+                    // Handle ticket purchase
+                    alert('Redirecting to ticket purchase page...');
+                } else {
+                    // Handle share
+                    alert('Share functionality will be implemented here');
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>

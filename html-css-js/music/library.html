@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Library - Metal Player</title>
+    <link rel="stylesheet" href="shared.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* Library Container Styles */
+        .library-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Library Header */
+        .library-header {
+            margin-bottom: 3rem;
+        }
+
+        .library-title {
+            font-size: 2.5rem;
+            color: var(--metal-text);
+            margin-bottom: 1rem;
+        }
+
+        .library-subtitle {
+            color: var(--metal-text-secondary);
+            font-size: 1.1rem;
+            max-width: 600px;
+        }
+
+        /* Library Tabs */
+        .library-tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            border-bottom: 2px solid var(--metal-border);
+            padding-bottom: 1rem;
+        }
+
+        .tab-button {
+            padding: 0.5rem 1rem;
+            background: none;
+            border: none;
+            color: var(--metal-text-secondary);
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .tab-button:hover {
+            color: var(--metal-text);
+        }
+
+        .tab-button.active {
+            color: var(--metal-highlight);
+        }
+
+        .tab-button.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1rem;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: var(--metal-highlight);
+        }
+
+        /* Library Grid */
+        .library-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .library-card {
+            background: var(--metal-card-bg);
+            border: 2px solid var(--metal-border);
+            border-radius: 10px;
+            overflow: hidden;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .library-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px var(--metal-shadow-color);
+        }
+
+        .library-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .library-content {
+            padding: 1.5rem;
+        }
+
+        .library-title {
+            font-size: 1.2rem;
+            color: var(--metal-text);
+            margin-bottom: 0.5rem;
+        }
+
+        .library-subtitle {
+            color: var(--metal-text-secondary);
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        .library-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: var(--metal-text-secondary);
+            font-size: 0.9rem;
+        }
+
+        /* Library Actions */
+        .library-actions {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .action-button {
+            padding: 0.8rem 1.5rem;
+            background: var(--metal-bg);
+            border: 2px solid var(--metal-border);
+            border-radius: 5px;
+            color: var(--metal-text);
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .action-button:hover {
+            background: var(--metal-highlight);
+        }
+
+        .action-button.primary {
+            background: var(--metal-highlight);
+            border-color: var(--metal-accent);
+        }
+
+        .action-button.primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px var(--metal-shadow-color);
+        }
+
+        /* Library Filters */
+        .library-filters {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-button {
+            padding: 0.5rem 1rem;
+            background: var(--metal-bg);
+            border: 2px solid var(--metal-border);
+            border-radius: 20px;
+            color: var(--metal-text);
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .filter-button:hover {
+            background: var(--metal-highlight);
+        }
+
+        .filter-button.active {
+            background: var(--metal-highlight);
+            border-color: var(--metal-accent);
+        }
+
+        /* Library Stats */
+        .library-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .stat-card {
+            background: var(--metal-card-bg);
+            border: 2px solid var(--metal-border);
+            border-radius: 10px;
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        .stat-icon {
+            width: 50px;
+            height: 50px;
+            background: var(--metal-highlight);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            color: var(--metal-text);
+            font-size: 1.5rem;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            color: var(--metal-text);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: var(--metal-text-secondary);
+            font-size: 0.9rem;
+        }
+
+        /* Responsive Styles */
+        @media screen and (max-width: 768px) {
+            .library-container {
+                padding-top: 5rem;
+            }
+
+            .library-header {
+                margin-bottom: 2rem;
+            }
+
+            .library-title {
+                font-size: 2rem;
+            }
+
+            .library-tabs {
+                overflow-x: auto;
+                padding-bottom: 0.5rem;
+            }
+
+            .tab-button {
+                white-space: nowrap;
+            }
+
+            .library-actions {
+                flex-wrap: wrap;
+            }
+
+            .library-filters {
+                flex-wrap: wrap;
+            }
+        }
+
+        @media screen and (max-width: 480px) {
+            .library-container {
+                padding: 5rem 1rem 1rem;
+            }
+
+            .library-title {
+                font-size: 1.8rem;
+            }
+
+            .library-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .library-actions {
+                flex-direction: column;
+            }
+
+            .library-stats {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Mobile Navigation Toggle -->
+    <button class="mobile-nav-toggle" id="mobileNavToggle">
+        <i class="fas fa-bars"></i>
+    </button>
+
+    <!-- Desktop Navigation -->
+    <nav class="metal-nav">
+        <a href="home.html" class="metal-nav-item">Home</a>
+        <a href="search.html" class="metal-nav-item">Search</a>
+        <a href="library.html" class="metal-nav-item">Library</a>
+        <a href="profile.html" class="metal-nav-item">Profile</a>
+        <a href="settings.html" class="metal-nav-item">Settings</a>
+    </nav>
+
+    <!-- Side Navigation -->
+    <nav class="side-nav" id="sideNav">
+        <div class="side-nav-header">
+            <a href="home.html" class="side-nav-logo">Metal Player</a>
+            <button class="side-nav-close" id="sideNavClose">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <ul class="side-nav-menu">
+            <li class="side-nav-item">
+                <a href="home.html" class="side-nav-link">
+                    <i class="fas fa-home"></i>
+                    Home
+                </a>
+            </li>
+            <li class="side-nav-item">
+                <a href="search.html" class="side-nav-link">
+                    <i class="fas fa-search"></i>
+                    Search
+                </a>
+            </li>
+            <li class="side-nav-item">
+                <a href="library.html" class="side-nav-link">
+                    <i class="fas fa-music"></i>
+                    Library
+                </a>
+            </li>
+            <li class="side-nav-item">
+                <a href="profile.html" class="side-nav-link">
+                    <i class="fas fa-user"></i>
+                    Profile
+                </a>
+            </li>
+            <li class="side-nav-item">
+                <a href="settings.html" class="side-nav-link">
+                    <i class="fas fa-cog"></i>
+                    Settings
+                </a>
+            </li>
+        </ul>
+    </nav>
+
+    <!-- Navigation Overlay -->
+    <div class="nav-overlay" id="navOverlay"></div>
+
+    <!-- Theme Switch Button -->
+    <button class="theme-switch" id="themeSwitch">
+        <i class="fas fa-sun"></i>
+    </button>
+
+    <!-- Library Container -->
+    <div class="library-container">
+        <!-- Library Header -->
+        <div class="library-header">
+            <h1 class="library-title">Your Library</h1>
+            <p class="library-subtitle">
+                Access your saved songs, albums, playlists, and podcasts. Organize your music collection and create your
+                perfect listening experience.
+            </p>
+        </div>
+
+        <!-- Library Stats -->
+        <div class="library-stats">
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-music"></i>
+                </div>
+                <div class="stat-value">1,234</div>
+                <div class="stat-label">Songs</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-compact-disc"></i>
+                </div>
+                <div class="stat-value">45</div>
+                <div class="stat-label">Albums</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-list"></i>
+                </div>
+                <div class="stat-value">12</div>
+                <div class="stat-label">Playlists</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-podcast"></i>
+                </div>
+                <div class="stat-value">8</div>
+                <div class="stat-label">Podcasts</div>
+            </div>
+        </div>
+
+        <!-- Library Actions -->
+        <div class="library-actions">
+            <button class="action-button primary">
+                <i class="fas fa-plus"></i>
+                Create Playlist
+            </button>
+            <button class="action-button">
+                <i class="fas fa-folder-plus"></i>
+                Add to Library
+            </button>
+            <button class="action-button">
+                <i class="fas fa-sort"></i>
+                Sort By
+            </button>
+        </div>
+
+        <!-- Library Filters -->
+        <div class="library-filters">
+            <button class="filter-button active">All</button>
+            <button class="filter-button">Recently Added</button>
+            <button class="filter-button">Favorites</button>
+            <button class="filter-button">Playlists</button>
+            <button class="filter-button">Albums</button>
+            <button class="filter-button">Podcasts</button>
+        </div>
+
+        <!-- Library Tabs -->
+        <div class="library-tabs">
+            <button class="tab-button active">Songs</button>
+            <button class="tab-button">Albums</button>
+            <button class="tab-button">Playlists</button>
+            <button class="tab-button">Podcasts</button>
+            <button class="tab-button">Artists</button>
+        </div>
+
+        <!-- Library Grid -->
+        <div class="library-grid">
+            <!-- Library Item 1 -->
+            <div class="library-card">
+                <img src="https://via.placeholder.com/300x200" alt="Library Item 1" class="library-image">
+                <div class="library-content">
+                    <div class="library-title">The Trooper</div>
+                    <div class="library-subtitle">Iron Maiden</div>
+                    <div class="library-meta">
+                        <span>Album: Piece of Mind</span>
+                        <span>4:12</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Library Item 2 -->
+            <div class="library-card">
+                <img src="https://via.placeholder.com/300x200" alt="Library Item 2" class="library-image">
+                <div class="library-content">
+                    <div class="library-title">Run to the Hills</div>
+                    <div class="library-subtitle">Iron Maiden</div>
+                    <div class="library-meta">
+                        <span>Album: The Number of the Beast</span>
+                        <span>3:53</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Library Item 3 -->
+            <div class="library-card">
+                <img src="https://via.placeholder.com/300x200" alt="Library Item 3" class="library-image">
+                <div class="library-content">
+                    <div class="library-title">Fear of the Dark</div>
+                    <div class="library-subtitle">Iron Maiden</div>
+                    <div class="library-meta">
+                        <span>Album: Fear of the Dark</span>
+                        <span>7:18</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Theme Switching
+        const themeSwitch = document.getElementById('themeSwitch');
+        const icon = themeSwitch.querySelector('i');
+
+        function setTheme(theme) {
+            document.documentElement.setAttribute('data-theme', theme);
+            localStorage.setItem('theme', theme);
+            updateIcon(theme);
+        }
+
+        function updateIcon(theme) {
+            icon.className = theme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+        }
+
+        // Check for saved theme preference
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme) {
+            setTheme(savedTheme);
+        } else {
+            // Check system preference
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            setTheme(prefersDark ? 'dark' : 'light');
+        }
+
+        themeSwitch.addEventListener('click', () => {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            setTheme(newTheme);
+        });
+
+        // Mobile Navigation
+        const mobileNavToggle = document.getElementById('mobileNavToggle');
+        const sideNav = document.getElementById('sideNav');
+        const sideNavClose = document.getElementById('sideNavClose');
+        const navOverlay = document.getElementById('navOverlay');
+
+        function toggleSideNav() {
+            sideNav.classList.toggle('active');
+            navOverlay.classList.toggle('active');
+            document.body.style.overflow = sideNav.classList.contains('active') ? 'hidden' : '';
+        }
+
+        mobileNavToggle.addEventListener('click', toggleSideNav);
+        sideNavClose.addEventListener('click', toggleSideNav);
+        navOverlay.addEventListener('click', toggleSideNav);
+
+        // Close side nav when clicking a link
+        document.querySelectorAll('.side-nav-link').forEach(link => {
+            link.addEventListener('click', () => {
+                if (sideNav.classList.contains('active')) {
+                    toggleSideNav();
+                }
+            });
+        });
+
+        // Library Tabs
+        const tabButtons = document.querySelectorAll('.tab-button');
+        tabButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                tabButtons.forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+                // Here you would typically show/hide the corresponding content
+            });
+        });
+
+        // Library Filters
+        const filterButtons = document.querySelectorAll('.filter-button');
+        filterButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                filterButtons.forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+                // Here you would typically filter the library items based on the selected category
+            });
+        });
+
+        // Library Actions
+        document.querySelectorAll('.action-button').forEach(button => {
+            button.addEventListener('click', () => {
+                if (button.classList.contains('primary')) {
+                    // Handle create playlist
+                    alert('Creating new playlist...');
+                } else if (button.querySelector('.fa-folder-plus')) {
+                    // Handle add to library
+                    alert('Adding to library...');
+                } else {
+                    // Handle sort
+                    alert('Sorting library...');
+                }
+            });
+        });
+
+        // Library Cards
+        document.querySelectorAll('.library-card').forEach(card => {
+            card.addEventListener('click', () => {
+                // Here you would typically navigate to the selected item's page
+                alert('Opening item...');
+            });
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th,
+        td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        .folder-row {
+            background-color: #e6f3ff;
+            font-weight: bold;
+        }
+
+        .bookmark-row:hover {
+            background-color: #f5f5f5;
+        }
+
+        .icon-cell {
+            width: 32px;
+            text-align: center;
+        }
+
+        .sn-cell {
+            width: 50px;
+            text-align: center;
+        }
+
+        .date-cell {
+            width: 150px;
+            text-wrap: nowrap;
+        }
+
+        .name-link,
+        .href-link {
+            color: #0066cc;
+            text-decoration: none;
+        }
+
+        .name-link:hover,
+        .href-link:hover {
+            text-decoration: underline;
+        }
+
+        .href-link {
+            color: #666;
+            font-size: 0.9em;
+            max-width: 300px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: inline-block;
+        }
+
+        .error-message {
+            color: #d32f2f;
+            background-color: #ffebee;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>🔍 Bookmarks Explorer</h1>
+    <p>Explore and organize your browser bookmarks in a clean, structured table view. View bookmarks by folders, see
+        their icons, and check when they were added.</p>
+    <h2>How to Use:</h2>
+    <ul>
+        <li>
+            Choose a file from your computer.
+        </li>
+        <li>
+            This is the file that you exported from your browser bookmarks.
+        </li>
+        <li>
+            Your bookmarks will be displayed in an organized table with folders, icons, and dates.
+        </li>
+    </ul>
+    <hr />
+    <div>
+        <h2>Import Bookmarks</h2>
+        <input type="file" id="fileInput" accept=".html,.htm">
+    </div>
+    <hr />
+    <div id="errorContainer" class="error-message"></div>
+    <div id="bookmarksTable">
+        <table>
+            <thead>
+                <tr>
+                    <th class="sn-cell">S/N</th>
+                    <th class="icon-cell">ICON</th>
+                    <th>Name</th>
+                    <th>HREF</th>
+                    <th class="date-cell">Date Added</th>
+                </tr>
+            </thead>
+            <tbody id="bookmarksBody"></tbody>
+        </table>
+    </div>
+
+    <script>
+        // Types and Interfaces
+        class BookmarkEntry {
+            constructor(title, url, folder, addDate, icon = '🔗') {
+                this.title = title;
+                this.url = url;
+                this.folder = folder;
+                this.addDate = addDate;
+                this.icon = icon;
+            }
+        }
+
+        // File Validation
+        const validateBookmarkFile = (file) => {
+            const errors = [];
+
+            if (!file) {
+                errors.push('No file selected');
+                return errors;
+            }
+
+            const validTypes = ['text/html', 'text/htm'];
+            if (!validTypes.includes(file.type)) {
+                errors.push('Invalid file type. Please upload an HTML file');
+            }
+
+            const validExtensions = ['.html', '.htm'];
+            const hasValidExtension = validExtensions.some(ext =>
+                file.name.toLowerCase().endsWith(ext)
+            );
+            if (!hasValidExtension) {
+                errors.push('Invalid file extension. Please upload an HTML file');
+            }
+
+            const maxSize = 10 * 1024 * 1024; // 10MB
+            if (file.size > maxSize) {
+                errors.push('File size too large. Maximum size is 10MB');
+            }
+
+            return errors;
+        };
+
+        // Content Validation
+        const validateBookmarkContent = (doc) => {
+            const errors = [];
+
+            const doctype = doc.doctype;
+            if (!doctype?.name?.toLowerCase().includes('netscape-bookmark-file-1')) {
+                errors.push(`Invalid bookmark file format: Expected "netscape-bookmark-file-1", got ${doctype?.name ? `"${doctype?.name}"` : 'nothing'}`);
+            }
+
+            const hasBookmarkStructure = doc.querySelector('DL');
+            if (!hasBookmarkStructure) {
+                errors.push('Invalid bookmark structure. Expected "DL" element, got nothing.');
+            }
+
+            const bookmarkLinks = doc.querySelectorAll('A[HREF]');
+            if (bookmarkLinks.length === 0) {
+                errors.push('No bookmarks found in file');
+            }
+
+            return errors;
+        };
+
+        // Data Sanitization
+        const sanitizeBookmark = (bookmark) => {
+            const formatBookmarkDate = (timestamp) => {
+                const date = new Date(parseInt(timestamp) * 1000);
+                if (isNaN(date.getTime())) {
+                    return 'Unknown date';
+                }
+                return date.toLocaleDateString(undefined, {
+                    year: 'numeric',
+                    month: 'short',
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+            };
+
+            return {
+                ...bookmark,
+                title: bookmark.title.trim(),
+                url: bookmark.url.trim(),
+                folder: bookmark.folder?.trim().replace(/[<>:"\/\\|?*]/g, '-'),
+                addDate: formatBookmarkDate(bookmark.addDate)
+            };
+        };
+
+        const isValidDate = (dateString) => {
+            const date = new Date(dateString);
+            return !isNaN(date.getTime());
+        };
+
+        // Extract bookmarks from DOM
+        const extractBookmarksFromDOM = (doc) => {
+            const bookmarks = [];
+            let currentFolder = '';
+
+            const processNode = (node) => {
+                if (node.tagName === 'H3') {
+                    currentFolder = node.textContent || '';
+                } else if (node.tagName === 'A') {
+                    const title = node.textContent || '';
+                    const url = node.getAttribute('href') || '';
+                    const addDate = node.getAttribute('add_date');
+                    const icon = node.getAttribute('icon') || '';
+
+                    bookmarks.push(new BookmarkEntry(title, url, currentFolder, addDate, icon));
+                }
+
+                Array.from(node.children).forEach(processNode);
+            };
+
+            const dlElement = doc.querySelector('DL');
+            if (dlElement) {
+                processNode(dlElement);
+            }
+
+            return bookmarks;
+        };
+
+        // Find duplicates
+        const findDuplicates = (bookmarks) => {
+            const seen = new Set();
+            const duplicates = [];
+
+            bookmarks.forEach(bookmark => {
+                if (seen.has(bookmark.url)) {
+                    duplicates.push(bookmark);
+                } else {
+                    seen.add(bookmark.url);
+                }
+            });
+
+            return duplicates;
+        };
+
+        // Main processing function
+        const processBookmarkFile = async (file) => {
+            try {
+                const fileErrors = validateBookmarkFile(file);
+                if (fileErrors.length > 0) {
+                    throw new Error(fileErrors.join('\n'));
+                }
+
+                const content = await file.text();
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(content, 'text/html');
+
+                const structureErrors = validateBookmarkContent(doc);
+                if (structureErrors.length > 0) {
+                    throw new Error(structureErrors.join('\n'));
+                }
+
+                const bookmarks = extractBookmarksFromDOM(doc);
+                const duplicates = findDuplicates(bookmarks);
+                const sanitizedBookmarks = bookmarks.map(sanitizeBookmark);
+
+                console.log(sanitizedBookmarks);
+
+                return {
+                    success: true,
+                    data: sanitizedBookmarks,
+                    duplicates: duplicates.length > 0 ? duplicates : null
+                };
+
+            } catch (error) {
+                return {
+                    success: false,
+                    errors: [error.message]
+                };
+            }
+        };
+
+        // UI Functions
+        const showError = (message) => {
+            const errorContainer = document.getElementById('errorContainer');
+            if (errorContainer) {
+                errorContainer.textContent = message;
+                errorContainer.style.display = 'block';
+            }
+        };
+
+        const hideError = () => {
+            const errorContainer = document.getElementById('errorContainer');
+            if (errorContainer) {
+                errorContainer.style.display = 'none';
+            }
+        };
+
+        const populateTable = (bookmarks) => {
+            const tbody = document.getElementById('bookmarksBody');
+            if (!tbody) return;
+
+            tbody.innerHTML = '';
+            let currentFolder = '';
+            let sn = 1;
+
+            bookmarks.forEach(bookmark => {
+                if (bookmark.folder !== currentFolder) {
+                    currentFolder = bookmark.folder;
+                    const folderRow = document.createElement('tr');
+                    folderRow.className = 'folder-row';
+                    folderRow.innerHTML = `<td colspan="5">${currentFolder || 'Uncategorized'}</td>`;
+                    tbody.appendChild(folderRow);
+                }
+
+                const iconHtml = bookmark.icon && bookmark.icon.startsWith('data:image')
+                    ? `<img src="${bookmark.icon}" alt="icon" style="width: 16px; height: 16px;">`
+                    : bookmark.icon || '🔗';
+
+                const row = document.createElement('tr');
+                row.className = 'bookmark-row';
+                row.innerHTML = `
+                    <td class="sn-cell">${sn++}</td>
+                    <td class="icon-cell">${iconHtml}</td>
+                    <td><a href="${bookmark.url}" class="name-link" target="_blank">${bookmark.title}</a></td>
+                    <td><a href="${bookmark.url}" class="href-link" target="_blank" title="${bookmark.url}">${bookmark.url}</a></td>
+                    <td class="date-cell">${bookmark.addDate}</td>
+                `;
+                tbody.appendChild(row);
+            });
+        };
+
+        // Event Listener
+        document.getElementById('fileInput')?.addEventListener('change', async (event) => {
+            const fileInput = event.target;
+            const file = fileInput.files?.[0];
+
+            if (!file) return;
+
+            hideError();
+
+            try {
+                const result = await processBookmarkFile(file);
+
+                if (result.success) {
+                    populateTable(result.data);
+                    if (result.duplicates) {
+                        showError(`Warning: Found ${result.duplicates.length} duplicate bookmarks`);
+                    }
+                } else {
+                    showError(result.errors.join('\n'));
+                }
+            } catch (error) {
+                showError(`Error processing file: ${error.message}`);
+            }
+        });
+    </script>
+</body>
+
+</html>

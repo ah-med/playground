@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Support - Metal Player</title>
+    <link rel="stylesheet" href="shared.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* Support Container Styles */
+        .support-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Support Header */
+        .support-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .support-title {
+            font-size: 2.5rem;
+            color: var(--metal-text);
+            margin-bottom: 1rem;
+        }
+
+        .support-subtitle {
+            color: var(--metal-text-secondary);
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Support Sections */
+        .support-section {
+            background: var(--metal-card-bg);
+            border: 2px solid var(--metal-border);
+            border-radius: 10px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            color: var(--metal-text);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .section-title i {
+            color: var(--metal-highlight);
+        }
+
+        /* FAQ Section */
+        .faq-list {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .faq-item {
+            background: var(--metal-bg);
+            border: 2px solid var(--metal-border);
+            border-radius: 5px;
+            overflow: hidden;
+            transition: all 0.3s;
+        }
+
+        .faq-item:hover {
+            background: var(--metal-highlight);
+        }
+
+        .faq-question {
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            color: var(--metal-text);
+            font-weight: 500;
+        }
+
+        .faq-answer {
+            padding: 0 1rem 1rem;
+            color: var(--metal-text-secondary);
+            display: none;
+        }
+
+        .faq-item.active .faq-answer {
+            display: block;
+        }
+
+        .faq-item.active .faq-question {
+            color: var(--metal-highlight);
+        }
+
+        .faq-icon {
+            transition: transform 0.3s;
+        }
+
+        .faq-item.active .faq-icon {
+            transform: rotate(180deg);
+        }
+
+        /* Contact Form */
+        .contact-form {
+            display: grid;
+            gap: 1.5rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .form-label {
+            color: var(--metal-text);
+            font-weight: 500;
+        }
+
+        .form-input {
+            padding: 0.8rem;
+            background: var(--metal-bg);
+            border: 2px solid var(--metal-border);
+            border-radius: 5px;
+            color: var(--metal-text);
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--metal-highlight);
+            box-shadow: 0 0 0 2px var(--metal-highlight);
+        }
+
+        .form-input::placeholder {
+            color: var(--metal-text-secondary);
+        }
+
+        .form-textarea {
+            min-height: 150px;
+            resize: vertical;
+        }
+
+        .submit-button {
+            padding: 1rem;
+            background: var(--metal-highlight);
+            border: 2px solid var(--metal-accent);
+            border-radius: 25px;
+            color: var(--metal-text);
+            font-size: 1.1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .submit-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px var(--metal-shadow-color);
+        }
+
+        /* Support Options */
+        .support-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .support-option {
+            background: var(--metal-card-bg);
+            border: 2px solid var(--metal-border);
+            border-radius: 10px;
+            padding: 1.5rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .support-option:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px var(--metal-shadow-color);
+        }
+
+        .option-icon {
+            width: 60px;
+            height: 60px;
+            background: var(--metal-highlight);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            color: var(--metal-text);
+            font-size: 1.5rem;
+        }
+
+        .option-title {
+            color: var(--metal-text);
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+        }
+
+        .option-description {
+            color: var(--metal-text-secondary);
+            font-size: 0.9rem;
+        }
+
+        /* Responsive Styles */
+        @media screen and (max-width: 768px) {
+            .support-container {
+                padding-top: 5rem;
+            }
+
+            .support-header {
+                margin-bottom: 2rem;
+            }
+
+            .support-title {
+                font-size: 2rem;
+            }
+
+            .support-section {
+                padding: 1.5rem;
+            }
+
+            .section-title {
+                font-size: 1.3rem;
+            }
+        }
+
+        @media screen and (max-width: 480px) {
+            .support-container {
+                padding: 5rem 1rem 1rem;
+            }
+
+            .support-title {
+                font-size: 1.8rem;
+            }
+
+            .support-section {
+                padding: 1rem;
+            }
+
+            .support-options {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Mobile Navigation Toggle -->
+    <button class="mobile-nav-toggle" id="mobileNavToggle">
+        <i class="fas fa-bars"></i>
+    </button>
+
+    <!-- Desktop Navigation -->
+    <nav class="metal-nav">
+        <a href="home.html" class="metal-nav-item">Home</a>
+        <a href="search.html" class="metal-nav-item">Search</a>
+        <a href="library.html" class="metal-nav-item">Library</a>
+        <a href="profile.html" class="metal-nav-item">Profile</a>
+        <a href="settings.html" class="metal-nav-item">Settings</a>
+    </nav>
+
+    <!-- Side Navigation -->
+    <nav class="side-nav" id="sideNav">
+        <div class="side-nav-header">
+            <a href="home.html" class="side-nav-logo">Metal Player</a>
+            <button class="side-nav-close" id="sideNavClose">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <ul class="side-nav-menu">
+            <li class="side-nav-item">
+                <a href="home.html" class="side-nav-link">
+                    <i class="fas fa-home"></i>
+                    Home
+                </a>
+            </li>
+            <li class="side-nav-item">
+                <a href="search.html" class="side-nav-link">
+                    <i class="fas fa-search"></i>
+                    Search
+                </a>
+            </li>
+            <li class="side-nav-item">
+                <a href="library.html" class="side-nav-link">
+                    <i class="fas fa-music"></i>
+                    Library
+                </a>
+            </li>
+            <li class="side-nav-item">
+                <a href="profile.html" class="side-nav-link">
+                    <i class="fas fa-user"></i>
+                    Profile
+                </a>
+            </li>
+            <li class="side-nav-item">
+                <a href="settings.html" class="side-nav-link">
+                    <i class="fas fa-cog"></i>
+                    Settings
+                </a>
+            </li>
+        </ul>
+    </nav>
+
+    <!-- Navigation Overlay -->
+    <div class="nav-overlay" id="navOverlay"></div>
+
+    <!-- Theme Switch Button -->
+    <button class="theme-switch" id="themeSwitch">
+        <i class="fas fa-sun"></i>
+    </button>
+
+    <!-- Support Container -->
+    <div class="support-container">
+        <!-- Support Header -->
+        <div class="support-header">
+            <h1 class="support-title">Support Center</h1>
+            <p class="support-subtitle">
+                Need help? We're here to assist you with any questions or issues you may have with Metal Player.
+            </p>
+        </div>
+
+        <!-- Support Options -->
+        <div class="support-options">
+            <div class="support-option">
+                <div class="option-icon">
+                    <i class="fas fa-book"></i>
+                </div>
+                <div class="option-title">Help Center</div>
+                <div class="option-description">Browse our comprehensive guides and tutorials</div>
+            </div>
+            <div class="support-option">
+                <div class="option-icon">
+                    <i class="fas fa-envelope"></i>
+                </div>
+                <div class="option-title">Email Support</div>
+                <div class="option-description">Get help via email from our support team</div>
+            </div>
+            <div class="support-option">
+                <div class="option-icon">
+                    <i class="fas fa-comments"></i>
+                </div>
+                <div class="option-title">Live Chat</div>
+                <div class="option-description">Chat with our support team in real-time</div>
+            </div>
+        </div>
+
+        <!-- FAQ Section -->
+        <div class="support-section">
+            <h2 class="section-title">
+                <i class="fas fa-question-circle"></i>
+                Frequently Asked Questions
+            </h2>
+            <div class="faq-list">
+                <div class="faq-item">
+                    <div class="faq-question">
+                        How do I reset my password?
+                        <i class="fas fa-chevron-down faq-icon"></i>
+                    </div>
+                    <div class="faq-answer">
+                        To reset your password, go to the login page and click on "Forgot Password". Follow the
+                        instructions sent to your email address to create a new password.
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">
+                        How do I download music for offline listening?
+                        <i class="fas fa-chevron-down faq-icon"></i>
+                    </div>
+                    <div class="faq-answer">
+                        To download music, click the download button next to any song or album. Make sure you have
+                        enough storage space on your device and a stable internet connection.
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">
+                        How do I create a playlist?
+                        <i class="fas fa-chevron-down faq-icon"></i>
+                    </div>
+                    <div class="faq-answer">
+                        Click the "Create Playlist" button in your library. Give your playlist a name and start adding
+                        songs by clicking the "+" button next to any song.
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">
+                        How do I change my subscription plan?
+                        <i class="fas fa-chevron-down faq-icon"></i>
+                    </div>
+                    <div class="faq-answer">
+                        Go to your account settings and click on "Subscription". Choose your desired plan and follow the
+                        payment instructions to complete the change.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Contact Form -->
+        <div class="support-section">
+            <h2 class="section-title">
+                <i class="fas fa-envelope"></i>
+                Contact Us
+            </h2>
+            <form class="contact-form">
+                <div class="form-group">
+                    <label class="form-label">Name</label>
+                    <input type="text" class="form-input" placeholder="Enter your name">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Email</label>
+                    <input type="email" class="form-input" placeholder="Enter your email">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Subject</label>
+                    <input type="text" class="form-input" placeholder="Enter the subject">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Message</label>
+                    <textarea class="form-input form-textarea" placeholder="Enter your message"></textarea>
+                </div>
+                <button type="submit" class="submit-button">Send Message</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Theme Switching
+        const themeSwitch = document.getElementById('themeSwitch');
+        const icon = themeSwitch.querySelector('i');
+
+        function setTheme(theme) {
+            document.documentElement.setAttribute('data-theme', theme);
+            localStorage.setItem('theme', theme);
+            updateIcon(theme);
+        }
+
+        function updateIcon(theme) {
+            icon.className = theme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+        }
+
+        // Check for saved theme preference
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme) {
+            setTheme(savedTheme);
+        } else {
+            // Check system preference
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            setTheme(prefersDark ? 'dark' : 'light');
+        }
+
+        themeSwitch.addEventListener('click', () => {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            setTheme(newTheme);
+        });
+
+        // Mobile Navigation
+        const mobileNavToggle = document.getElementById('mobileNavToggle');
+        const sideNav = document.getElementById('sideNav');
+        const sideNavClose = document.getElementById('sideNavClose');
+        const navOverlay = document.getElementById('navOverlay');
+
+        function toggleSideNav() {
+            sideNav.classList.toggle('active');
+            navOverlay.classList.toggle('active');
+            document.body.style.overflow = sideNav.classList.contains('active') ? 'hidden' : '';
+        }
+
+        mobileNavToggle.addEventListener('click', toggleSideNav);
+        sideNavClose.addEventListener('click', toggleSideNav);
+        navOverlay.addEventListener('click', toggleSideNav);
+
+        // Close side nav when clicking a link
+        document.querySelectorAll('.side-nav-link').forEach(link => {
+            link.addEventListener('click', () => {
+                if (sideNav.classList.contains('active')) {
+                    toggleSideNav();
+                }
+            });
+        });
+
+        // FAQ Toggle
+        document.querySelectorAll('.faq-question').forEach(question => {
+            question.addEventListener('click', () => {
+                const item = question.parentElement;
+                const isActive = item.classList.contains('active');
+
+                // Close all other items
+                document.querySelectorAll('.faq-item').forEach(faqItem => {
+                    faqItem.classList.remove('active');
+                });
+
+                // Toggle current item
+                if (!isActive) {
+                    item.classList.add('active');
+                }
+            });
+        });
+
+        // Form Submission
+        document.querySelector('.contact-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            // Here you would typically send the form data to your backend
+            alert('Message sent successfully! We will get back to you soon.');
+            e.target.reset();
+        });
+    </script>
+</body>
+
+</html>

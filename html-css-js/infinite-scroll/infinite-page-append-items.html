@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Infinite Scroll</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        #top {
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+        }
+
+        #toggleInfo {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            padding: 5px 10px;
+            border-radius: 4px;
+            background: #333;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        #scrollInfo {
+            position: fixed;
+            top: 50px;
+            right: 20px;
+            background-color: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: monospace;
+            font-size: 14px;
+            transition: opacity 0.3s ease;
+        }
+
+        #scrollInfo.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        #scrollInfo table {
+            border-collapse: collapse;
+        }
+
+        #scrollInfo td {
+            padding: 4px 8px;
+        }
+
+        #scrollInfo td:first-child {
+            color: #8ff;
+        }
+    </style>
+</head>
+
+<body>
+    <button id="toggleInfo">Show Info</button>
+    <div id="scrollInfo" class="hidden">
+        <table>
+            <tr>
+                <td>window.innerHeight</td>
+                <td id="innerHeight">0</td>
+            </tr>
+            <tr>
+                <td>window.scrollY</td>
+                <td id="scrollY">0</td>
+            </tr>
+            <tr>
+                <td>document.documentElement.scrollHeight</td>
+                <td id="scrollHeight">0</td>
+            </tr>
+            <tr>
+                <td>window.scrollY + window.innerHeight</td>
+                <td id="totalScroll">0</td>
+            </tr>
+        </table>
+    </div>
+    <button id="top">Scroll to the top ^</button>
+    <div class="container">
+        <h1>Infinite Scroll</h1>
+        <div id="content">
+            <div class="item">Item 1</div>
+            <div class="item">Item 2</div>
+            <div class="item">Item 3</div>
+            <div class="item">Item 4</div>
+            <div class="item">Item 5</div>
+            <div class="item">Item 6</div>
+            <div class="item">Item 7</div>
+            <div class="item">Item 8</div>
+            <div class="item">Item 9</div>
+            <div class="item">Item 10</div>
+            <div class="item">Item 11</div>
+            <div class="item">Item 12</div>
+            <div class="item">Item 13</div>
+            <div class="item">Item 14</div>
+            <div class="item">Item 15</div>
+        </div>
+        <script>
+            function updateScrollInfo() {
+                document.getElementById('innerHeight').textContent = window.innerHeight;
+                document.getElementById('scrollY').textContent = Math.round(window.scrollY);
+                document.getElementById('scrollHeight').textContent = document.documentElement.scrollHeight;
+                document.getElementById('totalScroll').textContent = Math.round(window.scrollY + window.innerHeight);
+            }
+            window.addEventListener('scroll', updateScrollInfo);
+            window.addEventListener('load', updateScrollInfo);
+            window.addEventListener('resize', updateScrollInfo);
+
+            window.addEventListener('scroll', () => {
+                // what is window.innerHeight?
+                // it is the height of the viewport
+                // what is viewport?
+                // it is the visible area of a web page
+                // what is window.scrollY?
+                // it is the number of pixels that the document is scrolled vertically
+                // what is document.documentElement.scrollHeight?
+                // it is the height of the entire document
+                if (window.innerHeight + window.scrollY >= document.documentElement.scrollHeight) {
+                    console.log('scrolled to the bottom');
+                    for (let i = 0; i < 15; i++) {
+                        const currentItemCount = content.children.length;
+                        const newItem = document.createElement('div');
+                        newItem.classList.add('item');
+                        newItem.textContent = `Item ${currentItemCount + 1}`;
+                        content.appendChild(newItem);
+                    }
+                }
+            });
+
+            document.getElementById('top').addEventListener('click', () => {
+                window.scrollTo(0, 0);
+            });
+
+            const toggleButton = document.getElementById('toggleInfo');
+            const scrollInfo = document.getElementById('scrollInfo');
+
+            toggleButton.addEventListener('click', () => {
+                scrollInfo.classList.toggle('hidden');
+                toggleButton.textContent = scrollInfo.classList.contains('hidden') ? 'Show Info' : 'Hide Info';
+            });
+        </script>
+    </div>
+</body>
+
+</html>

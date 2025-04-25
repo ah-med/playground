@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Podcasts - Metal Player</title>
+    <link rel="stylesheet" href="shared.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* Podcasts Container Styles */
+        .podcasts-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Podcasts Header */
+        .podcasts-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .podcasts-title {
+            font-size: 2.5rem;
+            color: var(--metal-text);
+            margin-bottom: 1rem;
+        }
+
+        .podcasts-subtitle {
+            color: var(--metal-text-secondary);
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Podcast Categories */
+        .podcast-categories {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .category-card {
+            background: var(--metal-card-bg);
+            border: 2px solid var(--metal-border);
+            border-radius: 10px;
+            padding: 1.5rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .category-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px var(--metal-shadow-color);
+        }
+
+        .category-icon {
+            width: 60px;
+            height: 60px;
+            background: var(--metal-highlight);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            color: var(--metal-text);
+            font-size: 1.5rem;
+        }
+
+        .category-title {
+            color: var(--metal-text);
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+        }
+
+        .category-count {
+            color: var(--metal-text-secondary);
+            font-size: 0.9rem;
+        }
+
+        /* Featured Podcasts */
+        .featured-podcasts {
+            margin-bottom: 3rem;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            color: var(--metal-text);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .section-title i {
+            color: var(--metal-highlight);
+        }
+
+        .featured-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .podcast-card {
+            background: var(--metal-card-bg);
+            border: 2px solid var(--metal-border);
+            border-radius: 10px;
+            overflow: hidden;
+            transition: all 0.3s;
+        }
+
+        .podcast-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px var(--metal-shadow-color);
+        }
+
+        .podcast-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .podcast-content {
+            padding: 1.5rem;
+        }
+
+        .podcast-title {
+            font-size: 1.5rem;
+            color: var(--metal-text);
+            margin-bottom: 0.5rem;
+        }
+
+        .podcast-host {
+            color: var(--metal-text-secondary);
+            font-size: 1rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .podcast-description {
+            color: var(--metal-text-secondary);
+            font-size: 0.9rem;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+
+        .podcast-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            color: var(--metal-text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .podcast-episodes {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .podcast-rating {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .podcast-actions {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .podcast-button {
+            flex: 1;
+            padding: 0.8rem;
+            background: var(--metal-bg);
+            border: 2px solid var(--metal-border);
+            border-radius: 5px;
+            color: var(--metal-text);
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .podcast-button:hover {
+            background: var(--metal-highlight);
+        }
+
+        .podcast-button.primary {
+            background: var(--metal-highlight);
+            border-color: var(--metal-accent);
+        }
+
+        .podcast-button.primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px var(--metal-shadow-color);
+        }
+
+        /* Podcast Filters */
+        .podcast-filters {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-button {
+            padding: 0.5rem 1rem;
+            background: var(--metal-bg);
+            border: 2px solid var(--metal-border);
+            border-radius: 20px;
+            color: var(--metal-text);
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .filter-button:hover {
+            background: var(--metal-highlight);
+        }
+
+        .filter-button.active {
+            background: var(--metal-highlight);
+            border-color: var(--metal-accent);
+        }
+
+        /* Now Playing */
+        .now-playing {
+            background: var(--metal-card-bg);
+            border: 2px solid var(--metal-border);
+            border-radius: 10px;
+            padding: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .now-playing-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .now-playing-title {
+            font-size: 1.5rem;
+            color: var(--metal-text);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .now-playing-title i {
+            color: var(--metal-highlight);
+        }
+
+        .now-playing-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .now-playing-image {
+            width: 100%;
+            max-width: 300px;
+            height: 300px;
+            object-fit: cover;
+            border-radius: 10px;
+            margin: 0 auto;
+        }
+
+        .now-playing-info {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .now-playing-podcast {
+            font-size: 1.2rem;
+            color: var(--metal-text);
+        }
+
+        .now-playing-episode {
+            font-size: 1.5rem;
+            color: var(--metal-highlight);
+            font-weight: 500;
+        }
+
+        .now-playing-progress {
+            width: 100%;
+            height: 4px;
+            background: var(--metal-bg);
+            border-radius: 2px;
+            margin: 1rem 0;
+        }
+
+        .progress-bar {
+            width: 45%;
+            height: 100%;
+            background: var(--metal-highlight);
+            border-radius: 2px;
+        }
+
+        .now-playing-controls {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .control-button {
+            width: 50px;
+            height: 50px;
+            background: var(--metal-bg);
+            border: 2px solid var(--metal-border);
+            border-radius: 50%;
+            color: var(--metal-text);
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .control-button:hover {
+            background: var(--metal-highlight);
+        }
+
+        .control-button.primary {
+            background: var(--metal-highlight);
+            border-color: var(--metal-accent);
+        }
+
+        .control-button.primary:hover {
+            transform: scale(1.1);
+        }
+
+        /* Responsive Styles */
+        @media screen and (max-width: 768px) {
+            .podcasts-container {
+                padding-top: 5rem;
+            }
+
+            .podcasts-header {
+                margin-bottom: 2rem;
+            }
+
+            .podcasts-title {
+                font-size: 2rem;
+            }
+
+            .podcast-filters {
+                flex-wrap: wrap;
+            }
+
+            .now-playing-content {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+
+            .now-playing-controls {
+                justify-content: center;
+            }
+        }
+
+        @media screen and (max-width: 480px) {
+            .podcasts-container {
+                padding: 5rem 1rem 1rem;
+            }
+
+            .podcasts-title {
+                font-size: 1.8rem;
+            }
+
+            .podcast-card {
+                margin-bottom: 1.5rem;
+            }
+
+            .podcast-actions {
+                flex-direction: column;
+            }
+
+            .now-playing-image {
+                max-width: 250px;
+                height: 250px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Mobile Navigation Toggle -->
+    <button class="mobile-nav-toggle" id="mobileNavToggle">
+        <i class="fas fa-bars"></i>
+    </button>
+
+    <!-- Desktop Navigation -->
+    <nav class="metal-nav">
+        <a href="home.html" class="metal-nav-item">Home</a>
+        <a href="search.html" class="metal-nav-item">Search</a>
+        <a href="library.html" class="metal-nav-item">Library</a>
+        <a href="profile.html" class="metal-nav-item">Profile</a>
+        <a href="settings.html" class="metal-nav-item">Settings</a>
+    </nav>
+
+    <!-- Side Navigation -->
+    <nav class="side-nav" id="sideNav">
+        <div class="side-nav-header">
+            <a href="home.html" class="side-nav-logo">Metal Player</a>
+            <button class="side-nav-close" id="sideNavClose">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <ul class="side-nav-menu">
+            <li class="side-nav-item">
+                <a href="home.html" class="side-nav-link">
+                    <i class="fas fa-home"></i>
+                    Home
+                </a>
+            </li>
+            <li class="side-nav-item">
+                <a href="search.html" class="side-nav-link">
+                    <i class="fas fa-search"></i>
+                    Search
+                </a>
+            </li>
+            <li class="side-nav-item">
+                <a href="library.html" class="side-nav-link">
+                    <i class="fas fa-music"></i>
+                    Library
+                </a>
+            </li>
+            <li class="side-nav-item">
+                <a href="profile.html" class="side-nav-link">
+                    <i class="fas fa-user"></i>
+                    Profile
+                </a>
+            </li>
+            <li class="side-nav-item">
+                <a href="settings.html" class="side-nav-link">
+                    <i class="fas fa-cog"></i>
+                    Settings
+                </a>
+            </li>
+        </ul>
+    </nav>
+
+    <!-- Navigation Overlay -->
+    <div class="nav-overlay" id="navOverlay"></div>
+
+    <!-- Theme Switch Button -->
+    <button class="theme-switch" id="themeSwitch">
+        <i class="fas fa-sun"></i>
+    </button>
+
+    <!-- Podcasts Container -->
+    <div class="podcasts-container">
+        <!-- Podcasts Header -->
+        <div class="podcasts-header">
+            <h1 class="podcasts-title">Podcasts</h1>
+            <p class="podcasts-subtitle">
+                Discover and listen to your favorite podcasts. From true crime to comedy, find the perfect podcast for
+                any moment.
+            </p>
+        </div>
+
+        <!-- Podcast Categories -->
+        <div class="podcast-categories">
+            <div class="category-card">
+                <div class="category-icon">
+                    <i class="fas fa-microphone"></i>
+                </div>
+                <div class="category-title">True Crime</div>
+                <div class="category-count">25+ podcasts</div>
+            </div>
+            <div class="category-card">
+                <div class="category-icon">
+                    <i class="fas fa-laugh"></i>
+                </div>
+                <div class="category-title">Comedy</div>
+                <div class="category-count">40+ podcasts</div>
+            </div>
+            <div class="category-card">
+                <div class="category-icon">
+                    <i class="fas fa-book"></i>
+                </div>
+                <div class="category-title">Education</div>
+                <div class="category-count">30+ podcasts</div>
+            </div>
+            <div class="category-card">
+                <div class="category-icon">
+                    <i class="fas fa-newspaper"></i>
+                </div>
+                <div class="category-title">News</div>
+                <div class="category-count">20+ podcasts</div>
+            </div>
+        </div>
+
+        <!-- Now Playing -->
+        <div class="now-playing">
+            <div class="now-playing-header">
+                <h2 class="now-playing-title">
+                    <i class="fas fa-play-circle"></i>
+                    Now Playing
+                </h2>
+            </div>
+            <div class="now-playing-content">
+                <img src="https://via.placeholder.com/300x300" alt="Podcast Episode" class="now-playing-image">
+                <div class="now-playing-info">
+                    <div class="now-playing-podcast">True Crime Stories</div>
+                    <div class="now-playing-episode">Episode 45: The Mysterious Case</div>
+                    <div class="now-playing-progress">
+                        <div class="progress-bar"></div>
+                    </div>
+                    <div class="now-playing-controls">
+                        <button class="control-button">
+                            <i class="fas fa-step-backward"></i>
+                        </button>
+                        <button class="control-button primary">
+                            <i class="fas fa-pause"></i>
+                        </button>
+                        <button class="control-button">
+                            <i class="fas fa-step-forward"></i>
+                        </button>
+                        <button class="control-button">
+                            <i class="fas fa-volume-up"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Featured Podcasts -->
+        <div class="featured-podcasts">
+            <h2 class="section-title">
+                <i class="fas fa-star"></i>
+                Featured Podcasts
+            </h2>
+            <div class="featured-grid">
+                <!-- Podcast 1 -->
+                <div class="podcast-card">
+                    <img src="https://via.placeholder.com/400x200" alt="Podcast 1" class="podcast-image">
+                    <div class="podcast-content">
+                        <h3 class="podcast-title">True Crime Stories</h3>
+                        <div class="podcast-host">
+                            <i class="fas fa-user"></i>
+                            Hosted by John Doe
+                        </div>
+                        <p class="podcast-description">
+                            Dive deep into the world's most intriguing true crime cases. Each episode brings you
+                            detailed analysis and expert insights.
+                        </p>
+                        <div class="podcast-meta">
+                            <div class="podcast-episodes">
+                                <i class="fas fa-list"></i>
+                                45 Episodes
+                            </div>
+                            <div class="podcast-rating">
+                                <i class="fas fa-star"></i>
+                                4.8
+                            </div>
+                        </div>
+                        <div class="podcast-actions">
+                            <button class="podcast-button primary">
+                                <i class="fas fa-play"></i>
+                                Listen Now
+                            </button>
+                            <button class="podcast-button">
+                                <i class="fas fa-heart"></i>
+                                Subscribe
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Podcast 2 -->
+                <div class="podcast-card">
+                    <img src="https://via.placeholder.com/400x200" alt="Podcast 2" class="podcast-image">
+                    <div class="podcast-content">
+                        <h3 class="podcast-title">Comedy Hour</h3>
+                        <div class="podcast-host">
+                            <i class="fas fa-user"></i>
+                            Hosted by Jane Smith
+                        </div>
+                        <p class="podcast-description">
+                            Laugh out loud with the best comedians in the industry. Fresh jokes and hilarious stories
+                            every week.
+                        </p>
+                        <div class="podcast-meta">
+                            <div class="podcast-episodes">
+                                <i class="fas fa-list"></i>
+                                120 Episodes
+                            </div>
+                            <div class="podcast-rating">
+                                <i class="fas fa-star"></i>
+                                4.9
+                            </div>
+                        </div>
+                        <div class="podcast-actions">
+                            <button class="podcast-button primary">
+                                <i class="fas fa-play"></i>
+                                Listen Now
+                            </button>
+                            <button class="podcast-button">
+                                <i class="fas fa-heart"></i>
+                                Subscribe
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Podcast 3 -->
+                <div class="podcast-card">
+                    <img src="https://via.placeholder.com/400x200" alt="Podcast 3" class="podcast-image">
+                    <div class="podcast-content">
+                        <h3 class="podcast-title">Tech Talk</h3>
+                        <div class="podcast-host">
+                            <i class="fas fa-user"></i>
+                            Hosted by Mike Johnson
+                        </div>
+                        <p class="podcast-description">
+                            Stay updated with the latest in technology. Expert analysis and discussions about the future
+                            of tech.
+                        </p>
+                        <div class="podcast-meta">
+                            <div class="podcast-episodes">
+                                <i class="fas fa-list"></i>
+                                75 Episodes
+                            </div>
+                            <div class="podcast-rating">
+                                <i class="fas fa-star"></i>
+                                4.7
+                            </div>
+                        </div>
+                        <div class="podcast-actions">
+                            <button class="podcast-button primary">
+                                <i class="fas fa-play"></i>
+                                Listen Now
+                            </button>
+                            <button class="podcast-button">
+                                <i class="fas fa-heart"></i>
+                                Subscribe
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Podcast Filters -->
+        <div class="podcast-filters">
+            <button class="filter-button active">All Podcasts</button>
+            <button class="filter-button">Popular</button>
+            <button class="filter-button">New Episodes</button>
+            <button class="filter-button">Subscribed</button>
+            <button class="filter-button">Trending</button>
+        </div>
+    </div>
+
+    <script>
+        // Theme Switching
+        const themeSwitch = document.getElementById('themeSwitch');
+        const icon = themeSwitch.querySelector('i');
+
+        function setTheme(theme) {
+            document.documentElement.setAttribute('data-theme', theme);
+            localStorage.setItem('theme', theme);
+            updateIcon(theme);
+        }
+
+        function updateIcon(theme) {
+            icon.className = theme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+        }
+
+        // Check for saved theme preference
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme) {
+            setTheme(savedTheme);
+        } else {
+            // Check system preference
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            setTheme(prefersDark ? 'dark' : 'light');
+        }
+
+        themeSwitch.addEventListener('click', () => {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            setTheme(newTheme);
+        });
+
+        // Mobile Navigation
+        const mobileNavToggle = document.getElementById('mobileNavToggle');
+        const sideNav = document.getElementById('sideNav');
+        const sideNavClose = document.getElementById('sideNavClose');
+        const navOverlay = document.getElementById('navOverlay');
+
+        function toggleSideNav() {
+            sideNav.classList.toggle('active');
+            navOverlay.classList.toggle('active');
+            document.body.style.overflow = sideNav.classList.contains('active') ? 'hidden' : '';
+        }
+
+        mobileNavToggle.addEventListener('click', toggleSideNav);
+        sideNavClose.addEventListener('click', toggleSideNav);
+        navOverlay.addEventListener('click', toggleSideNav);
+
+        // Close side nav when clicking a link
+        document.querySelectorAll('.side-nav-link').forEach(link => {
+            link.addEventListener('click', () => {
+                if (sideNav.classList.contains('active')) {
+                    toggleSideNav();
+                }
+            });
+        });
+
+        // Podcast Filters
+        const filterButtons = document.querySelectorAll('.filter-button');
+        filterButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                filterButtons.forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+                // Here you would typically filter the podcasts based on the selected category
+            });
+        });
+
+        // Podcast Controls
+        const playPauseButton = document.querySelector('.control-button.primary');
+        let isPlaying = true;
+
+        playPauseButton.addEventListener('click', () => {
+            isPlaying = !isPlaying;
+            playPauseButton.innerHTML = isPlaying ?
+                '<i class="fas fa-pause"></i>' :
+                '<i class="fas fa-play"></i>';
+        });
+
+        // Podcast Card Actions
+        document.querySelectorAll('.podcast-button').forEach(button => {
+            button.addEventListener('click', (e) => {
+                e.stopPropagation();
+                if (button.classList.contains('primary')) {
+                    // Handle play/pause
+                    alert('Starting podcast episode...');
+                } else {
+                    // Handle subscribe
+                    button.classList.toggle('active');
+                    button.innerHTML = button.classList.contains('active') ?
+                        '<i class="fas fa-heart"></i> Subscribed' :
+                        '<i class="fas fa-heart"></i> Subscribe';
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>
