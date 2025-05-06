@@ -205,29 +205,33 @@
             };
         };
 
-        const isValidDate = (dateString) => {
-            const date = new Date(dateString);
-            return !isNaN(date.getTime());
-        };
-
         // Extract bookmarks from DOM
         const extractBookmarksFromDOM = (doc) => {
             const bookmarks = [];
-            let currentFolder = '';
+            const folderStack = [''];
 
-            const processNode = (node) => {
+            const processNode = (node, depth = 0) => {
                 if (node.tagName === 'H3') {
-                    currentFolder = node.textContent || '';
+                    folderStack[depth] = node.textContent || '';
+                    folderStack.length = depth + 1; // Trim the stack
                 } else if (node.tagName === 'A') {
                     const title = node.textContent || '';
                     const url = node.getAttribute('href') || '';
                     const addDate = node.getAttribute('add_date');
                     const icon = node.getAttribute('icon') || '';
 
-                    bookmarks.push(new BookmarkEntry(title, url, currentFolder, addDate, icon));
+                    const folder = folderStack.slice(0, depth).join(' > ');
+
+                    bookmarks.push(new BookmarkEntry(title, url, folder, addDate, icon));
                 }
 
-                Array.from(node.children).forEach(processNode);
+                Array.from(node.children).forEach(child => {
+                    if (child.tagName === 'DT') {
+                        processNode(child, depth);
+                    } else {
+                        processNode(child, depth + 1);
+                    }
+                });
             };
 
             const dlElement = doc.querySelector('DL');
