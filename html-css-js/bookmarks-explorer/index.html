@@ -75,6 +75,31 @@
             border-radius: 4px;
             display: none;
         }
+
+        .search-container {
+            margin: 20px 0;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: #0066cc;
+            box-shadow: 0 0 5px rgba(0, 102, 204, 0.3);
+        }
+
+        .search-results-count {
+            margin: 10px 0;
+            color: #666;
+            font-size: 0.9em;
+        }
     </style>
 </head>
 
@@ -100,7 +125,11 @@
         <input type="file" id="fileInput" accept=".html,.htm">
     </div>
     <hr />
+    <div class="search-container">
+        <input type="search" id="searchInput" class="search-input" placeholder="Search bookmarks...">
+    </div>
     <div id="errorContainer" class="error-message"></div>
+    <div id="searchResultsCount" class="search-results-count"></div>
     <div id="bookmarksTable">
         <table>
             <thead>
@@ -311,6 +340,8 @@
             }
         };
 
+        let allBookmarks = [];
+
         const populateTable = (bookmarks) => {
             const tbody = document.getElementById('bookmarksBody');
             if (!tbody) return;
@@ -345,7 +376,29 @@
             });
         };
 
-        // Event Listener
+        const searchBookmarks = (query) => {
+            if (!query.trim()) {
+                populateTable(allBookmarks);
+                document.getElementById('searchResultsCount').textContent = '';
+                return;
+            }
+
+            query = query.toLowerCase();
+            const filteredBookmarks = allBookmarks.filter(bookmark => {
+                return (
+                    bookmark.folder.toLowerCase().includes(query) ||
+                    bookmark.title.toLowerCase().includes(query) ||
+                    bookmark.url.toLowerCase().includes(query) ||
+                    bookmark.addDate.toLowerCase().includes(query)
+                );
+            });
+
+            populateTable(filteredBookmarks);
+            document.getElementById('searchResultsCount').textContent =
+                `Found ${filteredBookmarks.length} matching bookmark${filteredBookmarks.length === 1 ? '' : 's'}`;
+        };
+
+        // Event Listeners
         document.getElementById('fileInput')?.addEventListener('change', async (event) => {
             const fileInput = event.target;
             const file = fileInput.files?.[0];
@@ -362,12 +415,17 @@
                     if (result.duplicates) {
                         showError(`Warning: Found ${result.duplicates.length} duplicate bookmarks`);
                     }
+                    allBookmarks = result.data;
                 } else {
                     showError(result.errors.join('\n'));
                 }
             } catch (error) {
                 showError(`Error processing file: ${error.message}`);
             }
+        });
+
+        document.getElementById('searchInput')?.addEventListener('input', (event) => {
+            searchBookmarks(event.target.value);
         });
     </script>
 </body>
