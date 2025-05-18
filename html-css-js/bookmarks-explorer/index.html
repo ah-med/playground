@@ -113,7 +113,53 @@
             Choose a file from your computer.
         </li>
         <li>
-            This is the file that you exported from your browser bookmarks.
+            This is the file that you exported from your browser bookmarks. Visit your browser <span
+                id="browserLink"></span> and export them
+            <script>
+                // get the browser type and use the appropriate link
+                console.log('User Agent:', navigator.userAgent);
+
+                // Detect browser using feature detection and user agent
+                const isBrave = typeof navigator.brave !== 'undefined';
+                const isFirefox = typeof browser !== 'undefined' || navigator.userAgent.includes('Firefox');
+                const isEdge = navigator.userAgent.includes('Edg');
+                const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+                const isOpera = navigator.userAgent.includes('OPR') || navigator.userAgent.includes('Opera');
+
+                let browserType = 'chrome'; // default to chrome
+                if (isBrave) browserType = 'brave';
+                else if (isFirefox) browserType = 'firefox';
+                else if (isEdge) browserType = 'edge';
+                else if (isSafari) browserType = 'safari';
+                else if (isOpera) browserType = 'opera';
+
+                console.log('Detected browser:', browserType);
+
+                // Get instructions based on browser type
+                const getBookmarksInstructions = (browser) => {
+                    switch (browser) {
+                        case 'brave':
+                            return 'Press Ctrl+Shift+O (Windows/Linux) or Cmd+Option+B (Mac) to open bookmarks, then click the three dots menu and select "Export bookmarks"';
+                        case 'chrome':
+                            return 'Press Ctrl+Shift+O (Windows/Linux) or Cmd+Option+B (Mac) to open bookmarks, then click the three dots menu and select "Export bookmarks"';
+                        case 'firefox':
+                            return 'Press Ctrl+Shift+B (Windows/Linux) or Cmd+Shift+B (Mac) to open bookmarks, then click "Import and Backup" and select "Export Bookmarks to HTML"';
+                        case 'edge':
+                            return 'Press Ctrl+Shift+O (Windows/Linux) or Cmd+Option+B (Mac) to open bookmarks, then click the three dots menu and select "Export favorites"';
+                        case 'safari':
+                            return 'Click File > Export Bookmarks in Safari\'s menu bar';
+                        case 'opera':
+                            return 'Press Ctrl+Shift+B (Windows/Linux) or Cmd+Shift+B (Mac) to open bookmarks, then click the three dots menu and select "Export bookmarks"';
+                        default:
+                            return 'Open your browser\'s bookmarks manager and look for an export option';
+                    }
+                };
+
+                const instructions = getBookmarksInstructions(browserType);
+                const urlNode = document.createElement('span');
+                urlNode.textContent = instructions;
+                document.getElementById('browserLink').appendChild(urlNode);
+            </script>
         </li>
         <li>
             Your bookmarks will be displayed in an organized table with folders, icons, and dates.
@@ -144,7 +190,6 @@
             <tbody id="bookmarksBody"></tbody>
         </table>
     </div>
-
     <script>
         // Types and Interfaces
         class BookmarkEntry {
