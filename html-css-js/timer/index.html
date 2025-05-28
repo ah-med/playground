@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Timer</title>
+    <style>
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .timer {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background-color: #f0f0f0;
+            padding: 20px 40px;
+        }
+
+        .timer-title {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .timer-display {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #f0f0f0;
+        }
+        
+
+        .timer-display-hours,
+        .timer-display-minutes,
+        .timer-display-seconds {
+            font-size: 48px;
+            font-weight: bold;
+            margin: 0 10px;
+        }
+
+        .timer-display-colon {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .time-buttons {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #f0f0f0;
+            padding: 20px 40px;
+        }
+
+        .time-button {
+            margin: 0 10px;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .start-button,
+        .stop-button,
+        .reset-button {
+            margin: 0 10px;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .start-button {
+            background-color: #007bff;
+            color: #fff;
+        }
+
+        .start-button:disabled {
+            background-color: #6c757d;
+            color: #fff;
+        }
+        
+        /* .stop-button {
+            background-color: #dc3545;
+            color: #fff;
+        }
+
+        .stop-button:disabled {
+            background-color: #6c757d;
+            color: #fff;
+        }
+         */
+        .reset-button {
+            background-color: #6c757d; 
+            color: #fff;
+        }
+
+        .reset-button:disabled {
+            background-color: #6c757d;
+            color: #fff;
+        }
+
+        .start-button:hover,
+        .stop-button:hover,
+        .reset-button:hover {
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="timer">
+            <div class="timer-title">Countdown Timer</div>
+            <div class="timer-display">
+                <span class="timer-display-hours" id="timer-display-hours">00</span><span class="timer-display-colon">:</span>
+                <span class="timer-display-minutes" id="timer-display-minutes">00</span><span class="timer-display-colon">:</span>
+                <span class="timer-display-seconds" id="timer-display-seconds">00</span>
+            </div>
+        </div>
+         <div class="time-buttons">
+            <div class="time-buttons-title">Choose Time:</div>
+            <button class="time-button" id="5s">5s</button>
+            <button class="time-button" id="30s">30s</button>
+            <button class="time-button" id="1min">1min</button>
+         </div>
+         <div class="control-buttons">
+            <button class="start-button" id="start">Start</button>
+            <button class="reset-button" id="reset">Reset</button>
+         </div>
+    </div>
+    <script>
+        /**
+         * Variables
+         */
+        let timeRemaining = 0;
+        let interval = null;
+
+        /**
+         * Constants
+         */
+        const TIME_BUTTONS = document.querySelectorAll('.time-button');
+        const RESET_BUTTON = document.getElementById('reset');
+        const START_BUTTON = document.getElementById('start');
+
+        /**
+         * Event Listeners
+         * Handle user interactions
+         */
+        START_BUTTON.addEventListener('click', () => {
+            if (timeRemaining === 0) {
+                alert("Please select a time");
+                return;
+            }
+            const onTimeUpdate = (time) => {
+                populateTimerDisplay(time);
+                toggleButtons('counting');
+            }
+            countdown(timeRemaining, () => {
+                console.log("time's up");
+                toggleButtons('default');
+            }, onTimeUpdate);
+        });
+
+        RESET_BUTTON.addEventListener('click', resetTimer);
+
+        TIME_BUTTONS.forEach(button => {
+            button.addEventListener('click', () => {
+                if (button.id === '5s') {
+                    timeRemaining = 5;
+                } else if (button.id === '30s') {
+                    timeRemaining = 30;
+                } else if (button.id === '1min') {
+                    timeRemaining = 60;
+                }
+
+                toggleButtons('timeChosen');
+                populateTimerDisplay(timeRemaining);
+            });
+        });
+
+
+        /**
+         * Timer Functions
+         * Handle timer logic
+         */
+
+        function resetTimer() {
+            clearInterval(interval);
+            timeRemaining = 0;
+            updateTimerDisplay(0, 0, 0);
+            toggleButtons('default');
+        }
+
+        function populateTimerDisplay(time) {
+            const { hours, minutes, seconds } = convertTimeToHoursMinutesSeconds(time);
+            updateTimerDisplay(hours, minutes, seconds);
+        }
+
+        function convertTimeToHoursMinutesSeconds(timeInSeconds) {
+            const hours = Math.floor(timeInSeconds / 3600);
+            const minutes = Math.floor((timeInSeconds % 3600) / 60);
+            const seconds = timeInSeconds % 60;
+            return { hours, minutes, seconds };
+        }
+
+        function countdown(time, onTimeUp = () => {}, onTimeUpdate = (time) => {}) {
+             interval = setInterval(() => {
+                time--;
+                onTimeUpdate(time);
+                if (time === 0 || time < 0) {
+                    clearInterval(interval);
+                    onTimeUp()
+                }
+            }, 1000);
+        }
+
+
+        /** 
+         * UI Functions
+         * Handle UI updates / state changes
+        */
+        function updateTimerDisplay(hours, minutes, seconds) {
+            const hoursElement = document.getElementById('timer-display-hours');
+            const minutesElement = document.getElementById('timer-display-minutes');
+            const secondsElement = document.getElementById('timer-display-seconds');
+            hoursElement.textContent = hours.toString().padStart(2, '0');
+            minutesElement.textContent = minutes.toString().padStart(2, '0');
+            secondsElement.textContent = seconds.toString().padStart(2, '0');
+        }
+
+        function toggleButtons(state) {
+            disableAllButtons();
+
+            if (state === 'default') {
+                TIME_BUTTONS.forEach(button => {
+                    button.disabled = false;
+                });
+                RESET_BUTTON.disabled = false;
+            } else if (state === 'counting') {
+                RESET_BUTTON.disabled = false;
+            } else if (state === 'timeChosen') {
+                TIME_BUTTONS.forEach(button => {
+                    button.disabled = false;
+                });
+                RESET_BUTTON.disabled = false;
+                START_BUTTON.disabled = false;
+            }
+        }
+
+        function disableAllButtons() {
+            TIME_BUTTONS.forEach(button => {
+                button.disabled = true;
+            });
+            RESET_BUTTON.disabled = true;
+            START_BUTTON.disabled = true;
+        }
+        
+    </script>
+</body>
+</html>
