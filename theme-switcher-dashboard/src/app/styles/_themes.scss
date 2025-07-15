@@ -1,0 +1,192 @@
+// Theme Definitions
+[data-theme="light"] {
+  --primary-color: #3b82f6;
+  --secondary-color: #6b7280;
+  --success-color: #10b981;
+  --danger-color: #ef4444;
+  --warning-color: #f59e0b;
+  --info-color: #06b6d4;
+
+  --text-color: #1a1a1a;
+  --text-muted: #6b7280;
+  --bg-color: #ffffff;
+  --bg-secondary: #f9fafb;
+  --border-color: #e5e7eb;
+  --focus-color: #3b82f6;
+
+  // Component specific colors
+  --card-bg: #ffffff;
+  --card-border: #e5e7eb;
+  --input-bg: #ffffff;
+  --input-border: #d1d5db;
+  --input-focus-border: #3b82f6;
+  --button-primary-bg: #3b82f6;
+  --button-primary-hover: #2563eb;
+  --button-secondary-bg: #6b7280;
+  --button-secondary-hover: #4b5563;
+
+  // Scrollbar
+  --scrollbar-track: #f1f5f9;
+  --scrollbar-thumb: #cbd5e1;
+  --scrollbar-thumb-hover: #94a3b8;
+}
+
+[data-theme="dark"] {
+  --primary-color: #3b82f6;
+  --secondary-color: #6b7280;
+  --success-color: #10b981;
+  --danger-color: #ef4444;
+  --warning-color: #f59e0b;
+  --info-color: #06b6d4;
+
+  --text-color: #f9fafb;
+  --text-muted: #9ca3af;
+  --bg-color: #111827;
+  --bg-secondary: #1f2937;
+  --border-color: #374151;
+  --focus-color: #60a5fa;
+
+  // Component specific colors
+  --card-bg: #1f2937;
+  --card-border: #374151;
+  --input-bg: #374151;
+  --input-border: #4b5563;
+  --input-focus-border: #60a5fa;
+  --button-primary-bg: #3b82f6;
+  --button-primary-hover: #2563eb;
+  --button-secondary-bg: #6b7280;
+  --button-secondary-hover: #4b5563;
+
+  // Scrollbar
+  --scrollbar-track: #1f2937;
+  --scrollbar-thumb: #4b5563;
+  --scrollbar-thumb-hover: #6b7280;
+}
+
+[data-theme="high-contrast"] {
+  --primary-color: #000000;
+  --secondary-color: #ffffff;
+  --success-color: #00ff00;
+  --danger-color: #ff0000;
+  --warning-color: #ffff00;
+  --info-color: #0000ff;
+
+  --text-color: #000000;
+  --text-muted: #333333;
+  --bg-color: #ffffff;
+  --bg-secondary: #f0f0f0;
+  --border-color: #000000;
+  --focus-color: #0000ff;
+
+  // Component specific colors
+  --card-bg: #ffffff;
+  --card-border: #000000;
+  --input-bg: #ffffff;
+  --input-border: #000000;
+  --input-focus-border: #0000ff;
+  --button-primary-bg: #000000;
+  --button-primary-hover: #333333;
+  --button-secondary-bg: #ffffff;
+  --button-secondary-hover: #f0f0f0;
+
+  // Scrollbar
+  --scrollbar-track: #f0f0f0;
+  --scrollbar-thumb: #000000;
+  --scrollbar-thumb-hover: #333333;
+}
+
+[data-theme="ocean"] {
+  --primary-color: #0ea5e9;
+  --secondary-color: #64748b;
+  --success-color: #10b981;
+  --danger-color: #ef4444;
+  --warning-color: #f59e0b;
+  --info-color: #06b6d4;
+
+  --text-color: #0f172a;
+  --text-muted: #475569;
+  --bg-color: #f8fafc;
+  --bg-secondary: #f1f5f9;
+  --border-color: #e2e8f0;
+  --focus-color: #0ea5e9;
+
+  // Component specific colors
+  --card-bg: #ffffff;
+  --card-border: #e2e8f0;
+  --input-bg: #ffffff;
+  --input-border: #cbd5e1;
+  --input-focus-border: #0ea5e9;
+  --button-primary-bg: #0ea5e9;
+  --button-primary-hover: #0284c7;
+  --button-secondary-bg: #64748b;
+  --button-secondary-hover: #475569;
+
+  // Scrollbar
+  --scrollbar-track: #f1f5f9;
+  --scrollbar-thumb: #cbd5e1;
+  --scrollbar-thumb-hover: #94a3b8;
+}
+
+[data-theme="sunset"] {
+  --primary-color: #f97316;
+  --secondary-color: #8b5cf6;
+  --success-color: #22c55e;
+  --danger-color: #ef4444;
+  --warning-color: #eab308;
+  --info-color: #06b6d4;
+
+  --text-color: #1e293b;
+  --text-muted: #64748b;
+  --bg-color: #fef7ed;
+  --bg-secondary: #fed7aa;
+  --border-color: #fdba74;
+  --focus-color: #f97316;
+
+  // Component specific colors
+  --card-bg: #ffffff;
+  --card-border: #fdba74;
+  --input-bg: #ffffff;
+  --input-border: #fed7aa;
+  --input-focus-border: #f97316;
+  --button-primary-bg: #f97316;
+  --button-primary-hover: #ea580c;
+  --button-secondary-bg: #8b5cf6;
+  --button-secondary-hover: #7c3aed;
+
+  // Scrollbar
+  --scrollbar-track: #fed7aa;
+  --scrollbar-thumb: #fdba74;
+  --scrollbar-thumb-hover: #fb923c;
+}
+
+[data-theme="forest"] {
+  --primary-color: #059669;
+  --secondary-color: #6b7280;
+  --success-color: #10b981;
+  --danger-color: #dc2626;
+  --warning-color: #f59e0b;
+  --info-color: #0891b2;
+
+  --text-color: #064e3b;
+  --text-muted: #374151;
+  --bg-color: #f0fdf4;
+  --bg-secondary: #dcfce7;
+  --border-color: #bbf7d0;
+  --focus-color: #059669;
+
+  // Component specific colors
+  --card-bg: #ffffff;
+  --card-border: #bbf7d0;
+  --input-bg: #ffffff;
+  --input-border: #dcfce7;
+  --input-focus-border: #059669;
+  --button-primary-bg: #059669;
+  --button-primary-hover: #047857;
+  --button-secondary-bg: #6b7280;
+  --button-secondary-hover: #4b5563;
+
+  // Scrollbar
+  --scrollbar-track: #dcfce7;
+  --scrollbar-thumb: #bbf7d0;
+  --scrollbar-thumb-hover: #86efac;
+}

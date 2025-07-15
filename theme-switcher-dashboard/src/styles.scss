@@ -1,0 +1,48 @@
+// Import Bootstrap
+@use "bootstrap/scss/bootstrap" as *;
+
+// Import custom theme variables and utilities
+@use "./app/styles/variables" as *;
+@use "./app/styles/themes" as *;
+@use "./app/styles/components" as *;
+@use "./app/styles/utilities" as *;
+
+// Global styles
+body {
+  font-family: var(--font-family-base);
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-base);
+  color: var(--text-color);
+  background-color: var(--bg-color);
+  transition: all 0.3s ease;
+}
+
+// Smooth transitions for theme switching
+* {
+  transition: background-color 0.3s ease, color 0.3s ease,
+    border-color 0.3s ease;
+}
+
+// Focus styles for accessibility
+:focus {
+  outline: 2px solid var(--focus-color);
+  outline-offset: 2px;
+}
+
+// Custom scrollbar
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--scrollbar-track);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--scrollbar-thumb);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--scrollbar-thumb-hover);
+}
