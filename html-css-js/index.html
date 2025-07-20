@@ -7,7 +7,7 @@
   <style>
     body {
       font-family: -apple-system, system-ui, sans-serif;
-      max-width: 800px;
+      max-width: 1000px;
       margin: 0 auto;
       padding: 2rem;
     }
@@ -21,6 +21,18 @@
       padding: 1rem;
       border: 1px solid #ddd;
       border-radius: 4px;
+    }
+
+    .category {
+      margin-bottom: 2rem;
+    }
+
+    .category h2 {
+      color: #2d3748;
+      font-size: 1.8rem;
+      margin-bottom: 1rem;
+      border-bottom: 2px solid #e2e8f0;
+      padding-bottom: 0.5rem;
     }
 
     a {
@@ -37,58 +49,146 @@
       font-size: 2.5rem;
       margin-bottom: 2rem;
     }
+
+    .tech-badge {
+      display: inline-block;
+      background: #e2e8f0;
+      color: #4a5568;
+      padding: 0.2rem 0.5rem;
+      border-radius: 3px;
+      font-size: 0.8rem;
+      margin-left: 0.5rem;
+    }
   </style>
 </head>
 
 <body>
   <h1>Playground 🎮</h1>
-  <div class="examples">
-    <div class="example">
-      <h2>Card Editor</h2>
-      <p>An interactive card customization interface demonstrating core React concepts.</p>
-      <a href="./card-editor/">View Demo</a>
-    </div>
-    <div class="example">
-      <h2>Bookmarks Explorer</h2>
-      <p>An interactive interface to explore and manage bookmarks.</p>
-      <a href="./html-css-js/bookmarks-explorer/">View Demo</a>
-    </div>
 
-    <div class="example">
-      <h2>Music Player</h2>
-      <p>A simple music player interface.</p>
-      <a href="./html-css-js/music/">View Demo</a>
-    </div>
+  <!-- React/Vue/Angular Projects -->
+  <div class="category">
+    <h2>🚀 Modern Web Applications</h2>
+    <div class="examples">
+      <div class="example">
+        <h3>Card Editor <span class="tech-badge">React</span></h3>
+        <p>An interactive card customization interface demonstrating core React concepts.</p>
+        <a href="./card-editor/">View Demo</a>
+      </div>
 
-    <div class="example">
-      <h2>Infinite Scroll</h2>
-      <p>Demonstration of infinite scrolling implementation.</p>
-      <a href="./html-css-js/infinite-scroll/infinite-page.html">View Demo</a>
-      <a href="./html-css-js/infinite-scroll/infinite-page-append-items.html">View Demo</a>
-    </div>
+      <div class="example">
+        <h3>Infinite Scroll <span class="tech-badge">Angular</span></h3>
+        <p>Angular application demonstrating infinite scrolling implementation.</p>
+        <a href="./infinite-scroll/">View Demo</a>
+      </div>
 
-    <div class="example">
-      <h2>Ways to Center a Div</h2>
-      <p>Various methods to center elements in CSS.</p>
-      <a href="./html-css-js/ways-to-center-a-div/ways-to-center-a-div.html">View Demo</a>
-    </div>
+      <div class="example">
+        <h3>Theme Switcher Dashboard <span class="tech-badge">Angular</span></h3>
+        <p>Dashboard with dynamic theme switching capabilities.</p>
+        <a href="./theme-switcher-dashboard/">View Demo</a>
+      </div>
 
-    <div class="example">
-      <h2>Render Blocking Demo</h2>
-      <p>Demonstration of render blocking resources.</p>
-      <a href="./html-css-js/render-blocking-demo/render-blocking.html">View Demo</a>
-    </div>
+      <div class="example">
+        <h3>Simple Angular Carousel <span class="tech-badge">Angular</span></h3>
+        <p>Basic carousel component built with Angular.</p>
+        <a href="./simple-angular-carousel/">View Demo</a>
+      </div>
 
-    <div class="example">
-      <h2>Show on Hover, Hide on Click</h2>
-      <p>Interactive elements that show on hover and hide on click.</p>
-      <a href="./html-css-js/show-onhover-hide-onclick.html">View Demo</a>
+      <div class="example">
+        <h3>Next.js Dashboard <span class="tech-badge">Next.js</span></h3>
+        <p>Full-featured dashboard built with Next.js and React.</p>
+        <a href="./nextjs-dashboard/">View Demo</a>
+      </div>
     </div>
+  </div>
 
-    <div class="example">
-      <h2>Snake Game</h2>
-      <p>A simple snake game built with HTML, CSS, and JavaScript.</p>
-      <a href="./html-css-js/snake-game/">View Demo</a>
+  <!-- Vue.js Projects -->
+  <div class="category">
+    <h2>⚡ Vue.js Examples</h2>
+    <div class="examples">
+      <div class="example">
+        <h3>Card Editor (Vue) <span class="tech-badge">Vue</span></h3>
+        <p>Card editor implementation using Vue.js.</p>
+        <a href="./vue/card-editor-markup.html">View Demo</a>
+      </div>
+
+      <div class="example">
+        <h3>Vue Card Editor v2 <span class="tech-badge">Vue</span></h3>
+        <p>Enhanced card editor with Vue.js features.</p>
+        <a href="./vue/version2/card-editor.html">View Demo</a>
+      </div>
+
+      <div class="example">
+        <h3>Two-Way Binding Demo <span class="tech-badge">Vue</span></h3>
+        <p>Demonstration of Vue.js two-way data binding.</p>
+        <a href="./vue/version2/two-way-binding.html">View Demo</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Static HTML/CSS/JS Projects -->
+  <div class="category">
+    <h2>🎨 Static HTML/CSS/JS Projects</h2>
+    <div class="examples">
+      <div class="example">
+        <h3>Bookmarks Explorer</h3>
+        <p>An interactive interface to explore and manage bookmarks.</p>
+        <a href="./html-css-js/bookmarks-explorer/">View Demo</a>
+      </div>
+
+      <div class="example">
+        <h3>Music Player</h3>
+        <p>A comprehensive music player interface with multiple pages.</p>
+        <a href="./html-css-js/music/">View Demo</a>
+      </div>
+
+      <div class="example">
+        <h3>Infinite Scroll Demo</h3>
+        <p>Demonstration of infinite scrolling implementation.</p>
+        <a href="./html-css-js/infinite-scroll/infinite-page.html">View Demo</a>
+        <a href="./html-css-js/infinite-scroll/infinite-page-append-items.html">View Demo (Append)</a>
+      </div>
+
+      <div class="example">
+        <h3>Ways to Center a Div</h3>
+        <p>Various methods to center elements in CSS.</p>
+        <a href="./html-css-js/ways-to-center-a-div/ways-to-center-a-div.html">View Demo</a>
+      </div>
+
+      <div class="example">
+        <h3>Render Blocking Demo</h3>
+        <p>Demonstration of render blocking resources.</p>
+        <a href="./html-css-js/render-blocking-demo/render-blocking.html">View Demo</a>
+      </div>
+
+      <div class="example">
+        <h3>Show on Hover, Hide on Click</h3>
+        <p>Interactive elements that show on hover and hide on click.</p>
+        <a href="./html-css-js/show-onhover-hide-onclick.html">View Demo</a>
+      </div>
+
+      <div class="example">
+        <h3>Snake Game</h3>
+        <p>A simple snake game built with HTML, CSS, and JavaScript.</p>
+        <a href="./html-css-js/snake-game/">View Demo</a>
+      </div>
+
+      <div class="example">
+        <h3>Timer</h3>
+        <p>A simple timer application.</p>
+        <a href="./html-css-js/timer/">View Demo</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Documentation -->
+  <div class="category">
+    <h2>📚 Documentation & Learning</h2>
+    <div class="examples">
+      <div class="example">
+        <h3>Canvas Documentation</h3>
+        <p>Learning materials and tutorials for HTML5 Canvas.</p>
+        <a href="./canvas/">View Documentation</a>
+      </div>
     </div>
   </div>
 </body>
