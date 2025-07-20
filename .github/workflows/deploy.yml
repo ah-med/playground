@@ -42,8 +42,9 @@ jobs:
       - name: Build nextjs-dashboard
         working-directory: nextjs-dashboard
         run: |
-          npm ci
-          npm run build
+          npm install -g pnpm
+          pnpm install
+          pnpm run build
           mkdir -p ../dist/nextjs-dashboard
           cp -r out/* ../dist/nextjs-dashboard/
 
@@ -58,7 +59,7 @@ jobs:
       - name: Build simple-angular-carousel (Angular)
         working-directory: simple-angular-carousel
         run: |
-          npm ci
+          npm install
           npm run build
           mkdir -p ../dist/simple-angular-carousel
           cp -r dist/* ../dist/simple-angular-carousel/
