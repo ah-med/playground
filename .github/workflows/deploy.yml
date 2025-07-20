@@ -39,15 +39,6 @@ jobs:
           mkdir -p ../dist/infinite-scroll
           cp -r dist/* ../dist/infinite-scroll/
 
-      - name: Build nextjs-dashboard
-        working-directory: nextjs-dashboard
-        run: |
-          npm install -g pnpm
-          pnpm install
-          pnpm run build
-          mkdir -p ../dist/nextjs-dashboard
-          cp -r out/* ../dist/nextjs-dashboard/
-
       - name: Build theme-switcher-dashboard (Angular)
         working-directory: theme-switcher-dashboard
         run: |
