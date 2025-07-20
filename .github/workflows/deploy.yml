@@ -28,8 +28,40 @@ jobs:
         run: |
           npm ci
           npm run build
-          mkdir -p ../../dist/card-editor
-          cp -r dist/* ../../dist/card-editor/
+          mkdir -p ../dist/card-editor
+          cp -r dist/* ../dist/card-editor/
+
+      - name: Build infinite-scroll (Angular)
+        working-directory: infinite-scroll
+        run: |
+          npm ci
+          npm run build
+          mkdir -p ../dist/infinite-scroll
+          cp -r dist/* ../dist/infinite-scroll/
+
+      - name: Build nextjs-dashboard
+        working-directory: nextjs-dashboard
+        run: |
+          npm ci
+          npm run build
+          mkdir -p ../dist/nextjs-dashboard
+          cp -r out/* ../dist/nextjs-dashboard/
+
+      - name: Build theme-switcher-dashboard (Angular)
+        working-directory: theme-switcher-dashboard
+        run: |
+          npm ci
+          npm run build
+          mkdir -p ../dist/theme-switcher-dashboard
+          cp -r dist/* ../dist/theme-switcher-dashboard/
+
+      - name: Build simple-angular-carousel (Angular)
+        working-directory: simple-angular-carousel
+        run: |
+          npm ci
+          npm run build
+          mkdir -p ../dist/simple-angular-carousel
+          cp -r dist/* ../dist/simple-angular-carousel/
 
       - name: Copy static pages
         run: |
@@ -43,6 +75,16 @@ jobs:
           rm -rf dist/html-css-js/404.html
           rm -rf dist/html-css-js/index.html
           rm -rf dist/html-css-js/Readme.md
+
+      - name: Copy Vue files
+        run: |
+          mkdir -p dist/vue
+          cp -r vue/* dist/vue/
+
+      - name: Copy Canvas documentation
+        run: |
+          mkdir -p dist/canvas
+          cp -r canvas/* dist/canvas/
 
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
