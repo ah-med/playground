@@ -24,7 +24,7 @@ jobs:
           node-version: "20"
 
       - name: Build card-editor
-        working-directory: react/card-editor
+        working-directory: card-editor
         run: |
           npm ci
           npm run build
