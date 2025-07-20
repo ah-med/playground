@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.7.16"></script>
+    <title>Vue.js two-way binding Example</title>
+  </head>
+
+  <body>
+    <div id="app">
+      <h1>Vue.js two-way binding Example</h1>
+      <blockquote>
+        <p>
+          In some cases, we may need “two-way binding” for a prop. Unfortunately,
+          true two-way binding can create maintenance issues, because child
+          components can mutate the parent without the source of that mutation
+          being obvious in both the parent and the child. -
+          <a
+            href="https://v2.vuejs.org/v2/guide/components-custom-events#sync-Modifier"
+            >https://v2.vuejs.org/v2/guide/components-custom-events#sync-Modifier</a
+          >
+        </p>
+      </blockquote>
+      <h2>Form values</h2>
+      <p>Message: {{ message }}</p>
+      <p>Checkbox state: {{ isChecked }}</p>
+      <p>Selected value: {{ selected }}</p>
+      <hr />
+      <h2>Form elements</h2>
+      <form-elements
+        v-bind:message.sync="message"
+        v-bind:checked.sync="isChecked"
+        v-bind:selected.sync="selected"
+      ></form-elements>
+
+      <hr />
+    </div>
+
+    <script>
+      Vue.component("form-elements", {
+        props: {
+          message: String,
+          checked: Boolean,
+          selected: String,
+        },
+        methods: {
+          emitPropValue(value, prop) {
+            this.$emit("update:" + prop, value);
+          },
+        },
+        template: `
+                <div>
+                    <h3>Input with two-way binding:</h3>
+                    <input 
+                        id="message-input"
+                        name="message"
+                        :value="message" 
+                        v-on:input="emitPropValue($event.target.value, 'message')"
+                        placeholder="Type something"
+                    >
+                    <p>Message: {{ message }}</p>
+
+                    <hr>
+                    <h3>Checkbox with two-way binding:</h3>
+                    <input 
+                        id="checkbox-input"
+                        name="isChecked"
+                        type="checkbox" 
+                        :checked="checked"
+                        v-on:input="emitPropValue($event.target.checked, 'checked')"
+                        checked 
+                    >
+                    <label for="checkbox-input">Check me</label>
+                    <p>Checkbox state: {{ checked }}</p>
+
+                    <hr>
+                    <h3>Select with two-way binding:</h3>
+                    <select 
+                        id="select-input"
+                        name="selected"
+                        :value="selected"
+                        v-on:input="emitPropValue($event.target.value, 'selected')"
+                        selected="B"
+                    >
+                        <option value="A">Option A</option>
+                        <option value="B">Option B</option>
+                        <option value="C">Option C</option>
+                    </select>
+                    <p>Selected value: {{ selected }}</p>
+                </div>
+            `,
+      });
+
+      var app = new Vue({
+        el: "#app",
+        data: {
+          message: "Hello from Vue data!",
+          isChecked: false,
+          selected: "C",
+        },
+      });
+    </script>
+  </body>
+</html>

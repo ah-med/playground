@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Canvas Exercise 3 - Solution</title>
+    <style>
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        canvas {
+            border: 1px solid #ccc;
+            margin: 20px 0;
+        }
+
+        .fallback {
+            background: #f0f0f0;
+            padding: 20px;
+            text-align: center;
+        }
+
+        #features {
+            margin-top: 20px;
+            padding: 10px;
+            background: #f8f8f8;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <canvas id="myCanvas" width="800" height="400">
+            <div class="fallback">
+                <h2>Canvas Not Supported</h2>
+                <p>Please use a modern browser to view this content.</p>
+            </div>
+        </canvas>
+        <div id="features"></div>
+    </div>
+
+    <script>
+        // Feature detection
+        function detectFeatures() {
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+
+            return {
+                canvas: !!ctx,
+                text: typeof ctx.fillText === 'function',
+                gradient: typeof ctx.createLinearGradient === 'function',
+                touch: 'ontouchstart' in window,
+                pointer: !!window.PointerEvent,
+                workers: !!window.Worker
+            };
+        }
+
+        // Display features
+        function displayFeatures(features) {
+            const featureDiv = document.getElementById('features');
+            featureDiv.innerHTML = '<h3>Browser Capabilities:</h3>';
+
+            for (const [feature, supported] of Object.entries(features)) {
+                featureDiv.innerHTML += `
+                    <div>
+                        ${feature}: ${supported ? '✅' : '❌'}
+                    </div>
+                `;
+            }
+        }
+
+        // Main drawing function
+        function draw(canvas, ctx) {
+            // Create gradient
+            const gradient = ctx.createLinearGradient(0, 0, canvas.width, 0);
+            gradient.addColorStop(0, '#ff6b6b');
+            gradient.addColorStop(0.5, '#4ecdc4');
+            gradient.addColorStop(1, '#45b7d1');
+
+            // Fill background
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // Add text
+            ctx.fillStyle = 'white';
+            ctx.font = '30px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText('Interactive Canvas', canvas.width / 2, 50);
+
+            // Draw interactive area
+            ctx.strokeStyle = 'white';
+            ctx.lineWidth = 2;
+            ctx.strokeRect(50, 100, canvas.width - 100, canvas.height - 150);
+        }
+
+        // Handle interaction
+        function handleInteraction(e) {
+            const rect = canvas.getBoundingClientRect();
+            const x = (e.clientX || e.touches[0].clientX) - rect.left;
+            const y = (e.clientY || e.touches[0].clientY) - rect.top;
+
+            ctx.beginPath();
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
+            ctx.arc(x, y, 20, 0, Math.PI * 2);
+            ctx.fill();
+        }
+
+        // Initialize
+        const features = detectFeatures();
+        displayFeatures(features);
+
+        if (features.canvas) {
+            const canvas = document.getElementById('myCanvas');
+            const ctx = canvas.getContext('2d');
+
+            // Initial drawing
+            draw(canvas, ctx);
+
+            // Event handling
+            if (features.pointer) {
+                canvas.addEventListener('pointerdown', handleInteraction);
+                canvas.addEventListener('pointermove', handleInteraction);
+            } else if (features.touch) {
+                canvas.addEventListener('touchstart', handleInteraction);
+                canvas.addEventListener('touchmove', handleInteraction);
+            } else {
+                canvas.addEventListener('mousedown', handleInteraction);
+                canvas.addEventListener('mousemove', handleInteraction);
+            }
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.7.16"></script>
+    <title>Vue.js</title>
+    <style>
+      body {
+        margin: 0;
+        width: 100vw;
+        height: 100vh;
+      }
+
+      #app {
+        display: flex;
+        height: 100%;
+      }
+
+      .side-bar {
+        width: 30%;
+        background-color: #fff5ee;
+        overflow-y: scroll;
+      }
+
+      .side-bar-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1rem;
+      }
+
+      .side-bar-header button {
+        background-color: #e5e7eb;
+        color: #000;
+        padding: 0.5rem 1rem;
+        border-radius: 0.375rem;
+        font-size: 0.875rem;
+        line-height: 1.25rem;
+        font-weight: 500;
+      }
+
+      .side-bar-header button:hover {
+        background-color: #d1d5db;
+      }
+
+      .main {
+        width: 70%;
+        height: 100%;
+        background-color: #f5fffa;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        overflow-y: scroll;
+      }
+
+      .card {
+        width: 24rem;
+        text-align: center;
+      }
+
+      /* tablets and lower */
+      @media (max-width: 768px) {
+        /* stack side bar below main */
+        #app {
+          flex-direction: column;
+        }
+
+        /* side bar below main */
+        .side-bar {
+          width: 100%;
+          height: 30%;
+          order: 2;
+          overflow-y: scroll;
+        }
+
+        .main {
+          width: 100%;
+          height: 70%;
+          order: 1;
+          overflow-y: scroll;
+        }
+      }
+
+      form {
+        padding: 1rem;
+      }
+
+      /* mobile and lower */
+      @media (max-width: 480px) {
+        .card {
+          width: auto;
+          max-width: 24rem;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="app">
+      <!-- Side bar -->
+      <section class="side-bar">
+        <div class="side-bar-header">
+          <h2>Customize your card</h2>
+          <button v-on:click="reset" class="transition-colors">Reset</button>
+        </div>
+        <card-form
+          :description.sync="description"
+          :image.sync="image"
+          :image-alt.sync="imageAlt"
+          :title.sync="title"
+          :background-color.sync="backgroundColor"
+          :text-color.sync="textColor"
+        ></card-form>
+      </section>
+      <!-- Main content -->
+      <main class="main">
+        <card
+          :description="description"
+          :image="image"
+          :image-alt="imageAlt"
+          :title="title"
+          :background-color="backgroundColor"
+          :text-color="textColor"
+        ></card>
+      </main>
+    </div>
+    <script>
+      // card component
+      Vue.component("card", {
+        props: [
+          "description",
+          "image",
+          "imageAlt",
+          "title",
+          "backgroundColor",
+          "textColor",
+        ],
+        computed: {
+          isBlobImage() {
+            return this.image.startsWith("blob:");
+          },
+        },
+        template: `
+            <div class="card relative max-w-sm rounded-lg overflow-hidden shadow-lg" :style="{ backgroundColor: backgroundColor, color: textColor }">
+                <img class="w-full h-48 object-cover"
+                    :src="image"
+                    :alt="imageAlt" />
+                <div class="px-6 py-4">
+                    <h2 class="font-bold text-xl mb-2">{{ title }}</h2>
+                    <p class="text-base">{{ description }}</p>
+                </div>
+
+                <div class="px-6 pb-4 text-xs text-gray-500">
+                    Photo by
+                    <template v-if="isBlobImage">
+                      you from your computer
+                    </template>
+                    <template v-else>
+                      <a href="https://unsplash.com/@heytowner" target="_blank" rel="noopener noreferrer"
+                        class="underline">
+                        Brad Towner
+                        </a>
+                        on
+                      <a href="https://unsplash.com/" target="_blank" rel="noopener noreferrer" class="underline">
+                        Unsplash
+                      </a>
+                    </template>
+                </div>
+            </div>`,
+      });
+
+      // form component
+      Vue.component("card-form", {
+        props: [
+          "description",
+          "image",
+          "imageAlt",
+          "title",
+          "backgroundColor",
+          "textColor",
+        ],
+        methods: {
+          emitPropValue(value, prop) {
+            if (prop === "image") {
+              const file = value;
+              if (file) {
+                const imageUrl = URL.createObjectURL(file);
+                this.$emit("update:" + prop, imageUrl);
+              }
+            } else {
+              console.log("emitting", prop, value);
+              this.$emit("update:" + prop, value);
+            }
+          },
+        },
+        template: `
+            <form>
+                <div class="space-y-4">
+                    <div>
+                        <label for="backgroundColor" class="block text-sm font-medium text-gray-700 mb-1">
+                            Background Color
+                        </label>
+                        <input 
+                            id="backgroundColor"
+                            type="color" 
+                            name="backgroundColor" 
+                            class="h-10 w-full rounded border border-gray-300" 
+                            :value="backgroundColor"
+                            v-on:input="emitPropValue($event.target.value, 'backgroundColor')"
+                        />
+                    </div>
+
+                    <div>
+                        <label for="textColor" class="block text-sm font-medium text-gray-700 mb-1">
+                            Text Color
+                        </label>
+                        <input 
+                            id="textColor"
+                            type="color" 
+                            name="textColor" 
+                            class="h-10 w-full rounded border border-gray-300" 
+                            :value="textColor"
+                            v-on:input="emitPropValue($event.target.value, 'textColor')"
+                        />
+                    </div>
+
+                    <div>
+                        <label for="cardTitle" class="block text-sm font-medium text-gray-700 mb-1">
+                            Title
+                        </label>
+                        <input 
+                            id="cardTitle"
+                            type="text" 
+                            name="title" 
+                            class="w-full px-3 py-2 border border-gray-300 rounded-md"
+                            :value="title"
+                            placeholder="Enter title"
+                            v-on:input="emitPropValue($event.target.value, 'title')"
+                        />
+                    </div>
+                    <div>
+                        <label for="cardDescription" class="block text-sm font-medium text-gray-700 mb-1">
+                            Description
+                        </label>
+                        <textarea 
+                            id="cardDescription"
+                            name="description" 
+                            class="w-full px-3 py-2 border border-gray-300 rounded-md"
+                            :value="description"
+                            placeholder="Enter description" 
+                            rows="3"
+                            v-on:input="emitPropValue($event.target.value, 'description')"
+                        ></textarea>
+                    </div>
+                    <div>
+                        <label for="cardImage" class="block text-sm font-medium text-gray-700 mb-1">
+                            Upload Image
+                        </label>
+                        <input 
+                            id="cardImage"
+                            type="file" 
+                            name="image" 
+                            accept="image/*"
+                            class="w-full px-3 py-2 border border-gray-300 rounded-md"
+                            v-on:input="emitPropValue($event.target.files[0], 'image')"
+                        />
+                    </div>
+                </div>
+            </form>
+            `,
+      });
+
+      var app = new Vue({
+        el: "#app",
+        data: function () {
+          return {
+            backgroundColor: "#ffffff",
+            textColor: "#000000",
+            image:
+              "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?auto=format&fit=crop&q=80",
+            imageAlt: "Mountain Landscape",
+            title: "Mountain Vista",
+            description:
+              "A serene mountain landscape captured during golden hour, showcasing nature's majestic beauty in all its glory.",
+          };
+        },
+        methods: {
+          reset() {
+            this.backgroundColor = "#ffffff";
+            this.textColor = "#000000";
+            this.image =
+              "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?auto=format&fit=crop&q=80";
+            this.imageAlt = "Mountain Landscape";
+            this.title = "Mountain Vista";
+            this.description =
+              "A serene mountain landscape captured during golden hour, showcasing nature's majestic beauty in all its glory.";
+          },
+        },
+      });
+    </script>
+  </body>
+</html>
