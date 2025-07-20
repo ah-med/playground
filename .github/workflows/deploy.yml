@@ -47,14 +47,6 @@ jobs:
           mkdir -p ../dist/theme-switcher-dashboard
           cp -r dist/* ../dist/theme-switcher-dashboard/
 
-      - name: Build simple-angular-carousel (Angular)
-        working-directory: simple-angular-carousel
-        run: |
-          npm install
-          npm run build
-          mkdir -p ../dist/simple-angular-carousel
-          cp -r dist/* ../dist/simple-angular-carousel/
-
       - name: Copy static pages
         run: |
           cp html-css-js/404.html dist/404.html
