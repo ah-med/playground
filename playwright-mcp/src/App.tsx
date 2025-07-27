@@ -1,25 +1,44 @@
 import React from 'react';
-import logo from './logo.svg';
+import { AuthProvider } from './contexts/AuthContext';
+import { TodoProvider } from './contexts/TodoContext';
+import { useAuth } from './contexts/AuthContext';
+import Header from './components/Header';
+import AuthContainer from './components/AuthContainer';
+import Dashboard from './components/Dashboard';
 import './App.css';
+
+const AppContent: React.FC = () => {
+  const { user, loading } = useAuth();
+
+  if (loading) {
+    return (
+      <div className="loading-container">
+        <div className="loading">Loading...</div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="App">
+      <Header />
+      <main className="main-content">
+        {user ? (
+          <TodoProvider>
+            <Dashboard />
+          </TodoProvider>
+        ) : (
+          <AuthContainer />
+        )}
+      </main>
+    </div>
+  );
+};
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <AuthProvider>
+      <AppContent />
+    </AuthProvider>
   );
 }
 
