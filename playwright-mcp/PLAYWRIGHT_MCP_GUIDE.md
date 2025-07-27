@@ -371,3 +371,9 @@ await page.waitForResponse((response) => response.url().includes("/api/todos"));
 ---
 
 **🎯 The Real Win**: Use MCP browser for rapid prototyping, then convert to Playwright tests for reliable CI/CD automation!
+
+## **📚 Additional Resources**
+
+- **[Official Playwright MCP Repository](https://github.com/microsoft/playwright-mcp)** - Source code, issues, and latest updates
+- **[Playwright MCP NPM Package](https://www.npmjs.com/package/@playwright/mcp)** - Installation and configuration
+- **[Model Context Protocol (MCP) Documentation](https://modelcontextprotocol.io/)** - Learn more about MCP
