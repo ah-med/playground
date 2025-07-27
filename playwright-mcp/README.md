@@ -2,6 +2,31 @@
 
 A modern React TypeScript todo application with authentication and comprehensive e2e testing using Playwright.
 
+## 🚀 Purpose: Rapid Prototyping → Reliable Automation
+
+This project demonstrates the **powerful workflow** of using **Playwright MCP** for rapid prototyping and debugging, then converting to **Playwright tests** for reliable CI/CD automation.
+
+### **The Workflow**
+
+1. **🔍 Rapid Prototyping with MCP Browser**
+
+   - Use natural language commands to interact with your app in real-time
+   - Take screenshots, check console logs, and debug instantly
+   - Test user flows quickly without writing test code
+
+2. **🔄 Convert to Playwright Tests**
+
+   - Transform MCP interactions into reliable, maintainable test code
+   - Create comprehensive test suites for CI/CD pipelines
+   - Ensure consistent, automated testing
+
+3. **⚡ CI/CD Automation**
+   - Run tests in automated environments
+   - Catch regressions early in development
+   - Maintain high code quality
+
+**📖 See [`PLAYWRIGHT_MCP_GUIDE.md`](./PLAYWRIGHT_MCP_GUIDE.md) for the complete workflow guide!**
+
 ## Features
 
 ### 🔐 Authentication System
@@ -133,6 +158,20 @@ For testing purposes, the following demo accounts are available:
    ```bash
    npm run test:e2e:ui
    ```
+
+### 🚀 Rapid Prototyping with MCP Browser
+
+For rapid prototyping and debugging, you can use the MCP (Model Context Protocol) browser integration. This allows you to:
+
+- **Real-time Interaction**: Test your app in real-time using natural language commands
+- **Quick Debugging**: Take screenshots, check console logs, and inspect elements instantly
+- **Rapid Iteration**: Convert MCP interactions to reliable Playwright tests
+
+See [`PLAYWRIGHT_MCP_GUIDE.md`](./PLAYWRIGHT_MCP_GUIDE.md) for a complete workflow guide on:
+
+- Setting up MCP browser for rapid prototyping
+- Converting MCP interactions to Playwright tests
+- Best practices for the prototyping → automation workflow
 
 ### Test Coverage
 
