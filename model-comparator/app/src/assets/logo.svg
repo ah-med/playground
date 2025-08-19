@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+  <!-- Background circle -->
+  <circle cx="100" cy="100" r="95" fill="#f8fafc" stroke="#e2e8f0" stroke-width="2"/>
+  
+  <!-- Central brain/neural network icon -->
+  <g transform="translate(100, 100)">
+    <!-- Main brain shape -->
+    <path d="M-25,-15 Q-30,-25 -25,-35 Q-20,-40 -15,-35 Q-10,-30 -15,-20 Q-20,-15 -25,-15 Z" fill="#3b82f6"/>
+    <path d="M25,-15 Q30,-25 25,-35 Q20,-40 15,-35 Q10,-30 15,-20 Q20,-15 25,-15 Z" fill="#3b82f6"/>
+    <path d="M-20,0 Q-25,10 -20,20 Q-15,25 -10,20 Q-5,15 -10,5 Q-15,0 -20,0 Z" fill="#3b82f6"/>
+    <path d="M20,0 Q25,10 20,20 Q15,25 10,20 Q5,15 10,5 Q15,0 20,0 Z" fill="#3b82f6"/>
+    <path d="M0,-10 Q-5,-15 0,-25 Q5,-15 0,-10 Z" fill="#3b82f6"/>
+    <path d="M0,10 Q-5,15 0,25 Q5,15 0,10 Z" fill="#3b82f6"/>
+    
+    <!-- Neural connections -->
+    <line x1="-15" y1="-20" x2="15" y2="-20" stroke="#1e40af" stroke-width="1.5" opacity="0.7"/>
+    <line x1="-15" y1="0" x2="15" y2="0" stroke="#1e40af" stroke-width="1.5" opacity="0.7"/>
+    <line x1="-15" y1="20" x2="15" y2="20" stroke="#1e40af" stroke-width="1.5" opacity="0.7"/>
+    <line x1="-10" y1="-10" x2="10" y2="10" stroke="#1e40af" stroke-width="1" opacity="0.5"/>
+    <line x1="-10" y1="10" x2="10" y2="-10" stroke="#1e40af" stroke-width="1" opacity="0.5"/>
+  </g>
+  
+  <!-- Three comparison circles representing different models -->
+  <g transform="translate(100, 100)">
+    <!-- Left model circle -->
+    <circle cx="-50" cy="-40" r="12" fill="#10b981" stroke="#059669" stroke-width="1.5"/>
+    <text x="-50" y="-35" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" font-weight="bold" fill="white">A</text>
+    
+    <!-- Right model circle -->
+    <circle cx="50" cy="-40" r="12" fill="#f59e0b" stroke="#d97706" stroke-width="1.5"/>
+    <text x="50" y="-35" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" font-weight="bold" fill="white">B</text>
+    
+    <!-- Bottom model circle -->
+    <circle cx="0" cy="50" r="12" fill="#8b5cf6" stroke="#7c3aed" stroke-width="1.5"/>
+    <text x="0" y="55" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" font-weight="bold" fill="white">C</text>
+    
+    <!-- Comparison arrows -->
+    <path d="M-38,-40 Q0,-50 38,-40" stroke="#6b7280" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
+    <path d="M-38,-40 Q0,-20 0,38" stroke="#6b7280" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
+    <path d="M38,-40 Q0,-20 0,38" stroke="#6b7280" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
+  </g>
+  
+  <!-- Arrow marker definition -->
+  <defs>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#6b7280"/>
+    </marker>
+  </defs>
+  
+  <!-- App name text -->
+  <text x="100" y="170" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#1f2937">Model Comparator</text>
+</svg>
