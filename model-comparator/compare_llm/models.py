@@ -1,8 +1,15 @@
 import asyncio
+import os
 import time
 from datetime import datetime
 from .interfaces import ModelInterface, ModelResponse
 from openai import OpenAI
+
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except ImportError:
+    pass
 
 
 class MockModel(ModelInterface):
@@ -39,17 +46,18 @@ class MockModel(ModelInterface):
 class OpenAICompatibleModel(ModelInterface):
     """Model that works with OpenAI-compatible APIs"""
     
-    def __init__(self, name: str, api_key: str, base_url: str, model: str = "gpt-3.5-turbo"):
+    def __init__(self, name: str, api_key: str, base_url: str = None, model: str = "gpt-3.5-turbo", temperature: float = 0.7, max_tokens: int = 4000):
         super().__init__(name, {"api_key": api_key, "base_url": base_url, "model": model})
         self.api_key = api_key
         self.base_url = base_url
         self.model = model
-    
+        self.temperature = temperature
+        self.max_tokens = max_tokens
+
     def _get_metadata(self, chat_response, prompt: str) -> dict:
         """Extract metadata from the chat response"""
-        return {
+        metadata = {
             "model": self.model,
-            "base_url": self.base_url,
             "prompt_tokens": chat_response.usage.prompt_tokens if chat_response.usage else len(prompt.split()),
             "completion_tokens": chat_response.usage.completion_tokens if chat_response.usage else 0,
             "total_tokens": chat_response.usage.total_tokens if chat_response.usage else len(prompt.split()),
@@ -57,6 +65,17 @@ class OpenAICompatibleModel(ModelInterface):
             "finish_reason": chat_response.choices[0].finish_reason,
             "provider": "openai_compatible"
         }
+        
+        if chat_response.choices[0].finish_reason == "length":
+            metadata["truncated"] = True
+            metadata["truncation_reason"] = "Response was cut off due to token limit"
+        else:
+            metadata["truncated"] = False
+        
+        if self.base_url:
+            metadata["base_url"] = self.base_url
+            
+        return metadata
     
     def _get_error_metadata(self, error: Exception) -> dict:
         """Get metadata for error responses"""
@@ -70,20 +89,24 @@ class OpenAICompatibleModel(ModelInterface):
         start_time = time.time()
         
         try:
-            client = OpenAI(
-                api_key=self.api_key,
-                base_url=self.base_url
-            )
+            client_kwargs = {"api_key": self.api_key}
+            if self.base_url:
+                client_kwargs["base_url"] = self.base_url
+            
+            client = OpenAI(**client_kwargs)
             
             chat_response = await asyncio.to_thread(
                 client.chat.completions.create,
                 model=self.model,
                 messages=[{"role": "user", "content": prompt}],
-                max_tokens=1000,
-                temperature=0.7
+                max_completion_tokens=self.max_tokens,
+                temperature=self.temperature
             )
             
             response = chat_response.choices[0].message.content
+            
+            if chat_response.choices[0].finish_reason == "length":
+                response += f"\n\n **RESPONSE TRUNCATED** - This response was cut off at {self.max_tokens:,} tokens. Consider asking a more specific question or breaking it into smaller parts."
             
             response_time = time.time() - start_time
             
@@ -170,4 +193,36 @@ class OllamaModel(OpenAICompatibleModel):
             **base_metadata,
             "provider": "ollama",
             "local": True
+        }
+
+class GPTFrontierModel(OpenAICompatibleModel):
+    """Model that works with GPT-* OpenAI's Frontier models"""
+    
+    def __init__(self, name: str, model: str = "gpt-5", temperature: float = 1.0, max_tokens: int = 8000):
+        api_key = os.getenv("OPENAI_API_KEY")
+        if not api_key:
+            raise ValueError(
+                "OPENAI_API_KEY environment variable not found. "
+                "Please set it in your .env file or environment variables."
+            )
+        
+        # OpenAI's official API doesn't need base_url - it defaults to their endpoint
+        super().__init__(name, api_key, base_url=None, model=model, temperature=temperature, max_tokens=max_tokens)
+    
+    def _get_metadata(self, chat_response, prompt: str) -> dict:
+        base_metadata = super()._get_metadata(chat_response, prompt)
+        
+        return {
+            **base_metadata,
+            "provider": "openai_official",
+            "frontier_model": True
+        }
+    
+    def _get_error_metadata(self, error: Exception) -> dict:
+        base_metadata = super()._get_error_metadata(error)
+        
+        return {
+            **base_metadata,
+            "provider": "openai_official",
+            "frontier_model": True
         }

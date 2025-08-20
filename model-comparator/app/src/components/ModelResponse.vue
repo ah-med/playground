@@ -16,18 +16,11 @@
             >• {{ formatTime(response.timestamp) }}</span
           >
           <span class="text-xs bg-gray-100 px-2 py-1 rounded-full"
-            >{{ response.responseTime }}s</span
+            >{{ formatResponseTime(response.responseTime) }}s</span
           >
         </div>
-        <p class="text-gray-800 mb-3">{{ response.response }}</p>
+        <ModelResponseContent :response="response.response" />
         <div class="text-xs text-gray-500 flex flex-wrap gap-2">
-          <span
-            v-if="modelType"
-            class="bg-blue-50 text-blue-700 px-2 py-1 rounded"
-          >
-            {{ modelType }}
-          </span>
-
           <span
             v-if="provider"
             class="bg-green-50 text-green-700 px-2 py-1 rounded"
@@ -48,6 +41,12 @@
           >
             Local
           </span>
+          <span
+            v-if="isFrontierModel"
+            class="bg-yellow-50 text-yellow-700 px-2 py-1 rounded"
+          >
+            Frontier
+          </span>
         </div>
       </div>
     </div>
@@ -55,8 +54,20 @@
 </template>
 
 <script>
+import Constants from "../services/constants";
+import ModelResponseContent from "./ModelResponseContent.vue";
+
 export default {
   name: "ModelResponse",
+  components: {
+    ModelResponseContent,
+  },
+  data() {
+    return {
+      MODEL_COLORS: Constants.MODEL_COLORS,
+      DEFAULT_MODEL_COLOR: Constants.DEFAULT_MODEL_COLOR,
+    };
+  },
   props: {
     response: {
       type: Object,
@@ -68,30 +79,9 @@ export default {
       return this.response.modelName.charAt(0);
     },
     avatarColor() {
-      const colors = {
-        MockGPT: "bg-purple-500",
-        "Llama3.2": "bg-green-500",
-        "Llama 3.2": "bg-green-500",
-        Llama2: "bg-blue-500",
-        "Llama 2": "bg-blue-500",
-        "GPT-4": "bg-indigo-500",
-        Claude: "bg-orange-500",
-        Gemini: "bg-yellow-500",
-        Mistral: "bg-red-500",
-        CodeLlama: "bg-teal-500",
-      };
-      return colors[this.response.modelName] || "bg-gray-500";
-    },
-    modelType() {
-      if (this.response.metadata) {
-        if (this.response.metadata.model) {
-          return this.response.metadata.model;
-        }
-        if (this.response.metadata.provider) {
-          return this.response.metadata.provider;
-        }
-      }
-      return null;
+      return (
+        this.MODEL_COLORS[this.response.modelName] || this.DEFAULT_MODEL_COLOR
+      );
     },
     provider() {
       if (this.response.metadata && this.response.metadata.provider) {
@@ -99,6 +89,7 @@ export default {
           ollama: "Ollama",
           openai_compatible: "OpenAI Compatible",
           anthropic: "Anthropic Claude",
+          openai_official: "OpenAI Official",
         };
         return (
           providerMap[this.response.metadata.provider] ||
@@ -115,8 +106,17 @@ export default {
     isLocalModel() {
       return this.response.metadata && this.response.metadata.local === true;
     },
+    isFrontierModel() {
+      return (
+        this.response.metadata && this.response.metadata.frontier_model === true
+      );
+    },
   },
   methods: {
+    formatResponseTime(time) {
+      return Number(time).toFixed(2);
+    },
+
     formatTime(timestamp) {
       const date = new Date(timestamp);
       const now = new Date();

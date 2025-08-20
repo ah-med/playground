@@ -119,6 +119,8 @@
 </template>
 
 <script>
+import Constants from "../services/constants";
+
 export default {
   name: "ModelSelector",
   props: {
@@ -132,6 +134,8 @@ export default {
       isOpen: false,
       searchTerm: "",
       selectedModels: [],
+      MODEL_COLORS: Constants.MODEL_COLORS,
+      DEFAULT_MODEL_COLOR: Constants.DEFAULT_MODEL_COLOR,
     };
   },
   computed: {
@@ -163,17 +167,7 @@ export default {
     },
 
     getModelColor(modelName) {
-      const colors = {
-        MockGPT: "bg-purple-500",
-        "Llama 3.2": "bg-green-500",
-        "Llama 2": "bg-blue-500",
-        "GPT-4": "bg-indigo-500",
-        Claude: "bg-orange-500",
-        Gemini: "bg-yellow-500",
-        Mistral: "bg-red-500",
-        CodeLlama: "bg-teal-500",
-      };
-      return colors[modelName] || "bg-gray-500";
+      return this.MODEL_COLORS[modelName] || this.DEFAULT_MODEL_COLOR;
     },
   },
 

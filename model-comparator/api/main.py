@@ -34,7 +34,6 @@ class ComparisonRequest(BaseModel):
 class ModelInfo(BaseModel):
     name: str
     type: str
-    config: Optional[Dict[str, Any]] = None
 
 class ComparisonResponse(BaseModel):
     model_name: str
@@ -68,7 +67,6 @@ async def get_models():
         model_info = ModelInfo(
             name=name,
             type=model.__class__.__name__,
-            config=model.config
         )
         models.append(model_info)
     

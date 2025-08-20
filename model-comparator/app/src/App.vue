@@ -7,6 +7,7 @@ import QuestionDisplay from "./components/QuestionDisplay.vue";
 import ResponsesThread from "./components/ResponsesThread.vue";
 import ResponsesSection from "./components/ResponsesSection.vue";
 import ModelResponse from "./components/ModelResponse.vue";
+import ShimmerLoader from "./components/ShimmerLoader.vue";
 import apiService from "./services/api.js";
 
 // State
@@ -18,6 +19,9 @@ const loading = ref(false);
 const error = ref(null);
 const apiStatus = ref("checking"); // 'checking', 'available', 'unavailable'
 const healthUrl = `${apiService.baseURL}/health`;
+
+const modelLoadingStates = ref({});
+const shimmerResponses = ref([]);
 
 const hasSelectedModels = computed(() => selectedModels.value.length > 0);
 
@@ -41,6 +45,18 @@ const handleQuestionSubmitted = async (question) => {
     error.value = null;
     currentQuestion.value = question;
 
+    responses.value = [];
+
+    shimmerResponses.value = selectedModels.value.map((modelName) => ({
+      id: `shimmer-${modelName}-${Date.now()}`,
+      modelName: modelName,
+      type: "shimmer",
+    }));
+
+    selectedModels.value.forEach((modelName) => {
+      modelLoadingStates.value[modelName] = true;
+    });
+
     const result = await apiService.compareModels(
       question,
       selectedModels.value
@@ -56,11 +72,22 @@ const handleQuestionSubmitted = async (question) => {
     }));
 
     responses.value = transformedResponses;
+    shimmerResponses.value = [];
+
+    selectedModels.value.forEach((modelName) => {
+      modelLoadingStates.value[modelName] = false;
+    });
 
     console.log("Comparison completed:", result);
   } catch (err) {
     error.value = err.message || "Failed to compare models. Please try again.";
     console.error("Error comparing models:", err);
+
+    shimmerResponses.value = [];
+
+    selectedModels.value.forEach((modelName) => {
+      modelLoadingStates.value[modelName] = false;
+    });
   } finally {
     loading.value = false;
   }
@@ -72,7 +99,12 @@ const clearError = () => {
 
 const clearResponses = () => {
   responses.value = [];
+  shimmerResponses.value = [];
   currentQuestion.value = "";
+
+  Object.keys(modelLoadingStates.value).forEach((key) => {
+    modelLoadingStates.value[key] = false;
+  });
 };
 
 const loadAvailableModels = async () => {
@@ -128,11 +160,9 @@ onMounted(() => {
           >
             API is not available. Please check if the backend server is running
             at
-            <a
-              :href="healthUrl"
-              target="_blank"
-              rel="noopener noreferrer"
-              >{{ healthUrl }}</a
+            <a :href="healthUrl" target="_blank" rel="noopener noreferrer">{{
+              healthUrl
+            }}</a
             >.
           </div>
 
@@ -153,7 +183,13 @@ onMounted(() => {
         <div class="max-w-4xl mx-auto p-6">
           <ResponsesSection>
             <QuestionDisplay :question="currentQuestion" />
-            <ResponsesThread>
+            <ResponsesThread v-if="currentQuestion || responses.length > 0">
+              <ShimmerLoader
+                v-for="shimmer in shimmerResponses"
+                :key="shimmer.id"
+                :model-name="shimmer.modelName"
+              />
+
               <ModelResponse
                 v-for="response in responses"
                 :key="response.id"
@@ -192,11 +228,9 @@ onMounted(() => {
           class="text-sm text-red-500 bg-red-50 p-3 rounded-md"
         >
           API is not available. Please check if the backend server is running at
-          <a
-            :href="healthUrl"
-            target="_blank"
-            rel="noopener noreferrer"
-            >{{ healthUrl }}</a
+          <a :href="healthUrl" target="_blank" rel="noopener noreferrer">{{
+            healthUrl
+          }}</a
           >.
         </div>
 
@@ -248,7 +282,10 @@ onMounted(() => {
           </div>
         </div>
 
-        <div v-if="loading" class="text-center py-8">
+        <div
+          v-if="loading && shimmerResponses.length === 0"
+          class="text-center py-8"
+        >
           <div
             class="inline-flex items-center px-4 py-2 font-semibold leading-6 text-gray-600"
           >
@@ -271,13 +308,19 @@ onMounted(() => {
                 d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
               ></path>
             </svg>
-            Comparing models...
+            Preparing models...
           </div>
         </div>
 
-        <ResponsesSection>
+        <ResponsesSection v-if="currentQuestion || responses.length > 0">
           <QuestionDisplay :question="currentQuestion" />
           <ResponsesThread>
+            <ShimmerLoader
+              v-for="shimmer in shimmerResponses"
+              :key="shimmer.id"
+              :model-name="shimmer.modelName"
+            />
+
             <ModelResponse
               v-for="response in responses"
               :key="response.id"
@@ -299,5 +342,4 @@ onMounted(() => {
   </div>
 </template>
 
-<style scoped>
-</style>
+<style scoped></style>

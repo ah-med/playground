@@ -2,7 +2,7 @@ from typing import List, Dict, Any, Optional
 import asyncio
 from datetime import datetime
 from .interfaces import ModelInterface, ModelResponse
-from .models import MockModel, OllamaModel
+from .models import MockModel, OllamaModel, GPTFrontierModel
 
 class CompareLLM:
     """Main class for comparing multiple LLM models"""
@@ -11,7 +11,11 @@ class CompareLLM:
         self.available_models: Dict[str, ModelInterface] = {
             "MockGPT": MockModel("MockGPT", response_delay=0.1),
             "Llama3.2": OllamaModel("Llama3.2", model="llama3.2"),
-            "Llama2": OllamaModel("Llama2", model="llama2")
+            "Llama2": OllamaModel("Llama2", model="llama2"),
+            "GPT-5": GPTFrontierModel("GPT-5", model="gpt-5"),
+            "GPT-5 mini": GPTFrontierModel("GPT-5 mini", model="gpt-5-mini"),
+            "GPT-5 nano": GPTFrontierModel("GPT-5 nano", model="gpt-5-nano"),
+            "GPT-4.1": GPTFrontierModel("GPT-4.1", model="gpt-4.1", temperature=0.7),
         }
         self.comparison_history: List[Dict[str, Any]] = []
     
