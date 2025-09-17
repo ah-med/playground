@@ -1,0 +1,4 @@
+.venv/
+dvdrental/
+.env
+__pycache__/
