@@ -70,6 +70,11 @@ jobs:
           mkdir -p dist/canvas
           cp -r canvas/* dist/canvas/
 
+      - name: Copy Break Reminder app
+        run: |
+          mkdir -p dist/break-reminder
+          cp -r break-reminder/* dist/break-reminder/
+
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
         with:
