@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Break Reminder</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Start State -->
+    <div id="start-state" class="state-view">
+        <div class="start-container">
+            <h1>Break Reminder</h1>
+            <p class="subtitle">Take care of your eyes and body</p>
+            
+            <div class="config-panel" id="config-panel">
+                <h2>Settings</h2>
+                <div class="config-item">
+                    <label for="movement-interval">
+                        Movement Interval (minutes):
+                        <span id="movement-interval-value">45</span>
+                    </label>
+                    <input type="range" id="movement-interval" min="30" max="60" value="45" step="5" data-min="30" data-max="60" data-step="5">
+                </div>
+                <div class="config-item">
+                    <label for="movement-break-duration">
+                        Movement Break Duration (minutes):
+                        <span id="movement-break-duration-value">2</span>
+                    </label>
+                    <input type="range" id="movement-break-duration" min="1" max="5" value="2" step="1">
+                </div>
+            </div>
+            
+            <button id="start-button" class="primary-button">Start</button>
+        </div>
+    </div>
+
+    <!-- Main Timer State -->
+    <div id="main-timer-state" class="state-view hidden">
+        <div class="main-timer-container">
+            <h2>Active Timers</h2>
+            <div class="timers-grid">
+                <div class="timer-card eyes-timer">
+                    <div class="timer-label">Eyes</div>
+                    <div class="timer-display" id="eyes-timer-display">20:00</div>
+                    <div class="timer-description">20-20-20 Rule</div>
+                </div>
+                <div class="timer-card movement-timer">
+                    <div class="timer-label">Movement</div>
+                    <div class="timer-display" id="movement-timer-display">45:00</div>
+                    <div class="timer-description">Stand up & move</div>
+                </div>
+            </div>
+            <button id="stop-button" class="secondary-button">Stop</button>
+        </div>
+    </div>
+
+    <!-- Eyes Alarm State -->
+    <div id="eyes-alarm-state" class="state-view hidden alarm-overlay">
+        <div class="alarm-container">
+            <div class="alarm-icon">👁️</div>
+            <h1 class="alarm-title">Eye Break Time!</h1>
+            <p class="alarm-instruction">Look at Something 20 feet away for</p>
+            <div class="alarm-timer-display" id="eyes-break-timer-display">00:20</div>
+            <button id="eyes-break-done-button" class="primary-button">Done</button>
+        </div>
+    </div>
+
+    <!-- Movement Alarm State -->
+    <div id="movement-alarm-state" class="state-view hidden alarm-overlay">
+        <div class="alarm-container">
+            <div class="alarm-icon">🚶</div>
+            <h1 class="alarm-title">Movement Break Time!</h1>
+            <p class="alarm-instruction">Move, Walk, Stretch for</p>
+            <div class="alarm-timer-display" id="movement-break-timer-display">02:00</div>
+            <button id="movement-break-done-button" class="primary-button">Done</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
+
